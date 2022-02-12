@@ -8,6 +8,7 @@ import org.springframework.web.servlet.AsyncHandlerInterceptor;
 
 import com.daagng.test.api.service.UserService;
 import com.daagng.test.common.exception.UnauthorizedException;
+import com.daagng.test.db.entity.User;
 
 import lombok.RequiredArgsConstructor;
 
@@ -21,8 +22,10 @@ public class AuthInterceptor implements AsyncHandlerInterceptor {
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
 		try {
 			Long user_id = Long.parseLong(request.getHeader("Authorization"));
-			if (userService.findUser(user_id) == null)
+			User user = userService.findUser(user_id);
+			if (user == null)
 				throw new UnauthorizedException();
+			request.setAttribute("user", user);
 			return true;
 		} catch (Exception e) {
 			throw new UnauthorizedException();
