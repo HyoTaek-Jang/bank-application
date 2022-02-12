@@ -1,9 +1,9 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    password: 1234
     url: jdbc:mysql://localhost:3306/intern?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul
     username: root
+    password: 1234
 
   jpa:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
@@ -25,5 +25,8 @@ spring:
   config:
     activate:
       on-profile: "docker"
-
-
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://db:3306/intern?allowPublicKeyRetrieval=true&useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul
+    username: sa
+    password: sa
