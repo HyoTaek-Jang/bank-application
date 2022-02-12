@@ -1,3 +1,6 @@
+/logs
+/docker-logs
+
 HELP.md
 .gradle
 build/

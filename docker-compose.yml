@@ -1,0 +1,22 @@
+version: "3.0"
+services:
+  db:
+    image: mysql:8
+    environment:
+      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_USER: sa
+      MYSQL_PASSWORD: sa
+      MYSQL_DATABASE: intern
+    ports:
+      - 3309:3306
+  intern-service:
+    build: .
+    ports:
+      - 8080:8080
+    restart: on-failure
+    volumes:
+      - ./docker-logs:/logs
+    links:
+      - db
+    depends_on:
+      - db
