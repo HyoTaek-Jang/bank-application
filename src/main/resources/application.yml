@@ -35,3 +35,15 @@ spring:
     url: jdbc:mysql://db:3306/intern?allowPublicKeyRetrieval=true&useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul
     username: sa
     password: sa
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: "test"
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/testdb?allowPublicKeyRetrieval=true&useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul
+    username: root
+    password: 1234
