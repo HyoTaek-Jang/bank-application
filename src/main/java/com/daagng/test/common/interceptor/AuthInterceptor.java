@@ -14,10 +14,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AuthInterceptor implements AsyncHandlerInterceptor {
 
-	private UserService userService;
+	private final UserService userService;
 
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-		return true;
+		Long user_id = Long.parseLong(request.getHeader("Authorization"));
+		return userService.findUser(user_id) != null;
 	}
 }
