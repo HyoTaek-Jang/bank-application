@@ -22,6 +22,7 @@ public class Transfer extends BaseEntity{
 	@NotNull
 	private Long to_account_number;
 
+	// common - constants - TransferConstant 참조
 	@NotNull
 	private Integer state;
 
