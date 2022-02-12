@@ -1,0 +1,29 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    password: 1234
+    url: jdbc:mysql://localhost:3306/intern?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul
+    username: root
+
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    open-in-view: false
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+
+logging:
+  level:
+    org:
+      springframework:
+        web:
+          filter: DEBUG
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: "docker"
+
+

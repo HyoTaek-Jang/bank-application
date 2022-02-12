@@ -8,7 +8,7 @@ CI : Github Actions
 
 코드관리 : Git, Github
 
-배포 : Docker, docker-compose 사용, DB의 경우, prod와 test DB를 분리하여 사용하고자 함.
+배포 : doker, docker-compose 사용, DB의 경우, prod와 test DB를 분리하여 사용하고자 함.
 
 사용자 데이터, 은행 데이터는 data.sql로 삽입 예정 (사용자 5개, 은행 3개 초기 세팅)
 
@@ -30,9 +30,8 @@ CI : Github Actions
    2. 기존 등록된 계좌인지 확인
    3. 뱅킹 시스템을 활용하여 계좌등록 (POST /register)
       1. 200 응답 시, DB에 사용자 계좌등록
-         1. Redis sorted set으로 select 없이 가능한 ID 찾기
          2. 가능한 ID가 없다면 에러처리 
-         3. 등록된 계좌 ID는 랜덤한 8자리의 숫자
+         3. 등록된 계좌 ID는 유니크 8자리의 숫자
          4. 클라이언트 정상 값 반환
       2. 타 status code 응답 시, 에러 핸들링 및 클라이언트에 반환
 3. **등록된 계좌를 통해 타 계좌번호로 이체**
@@ -43,7 +42,7 @@ CI : Github Actions
    2. 등록된 계좌 ID가 유효한지 확인
    3. 지연 거래 내역이 존재하는지 확인
    4. tx_id 생성
-      1. account_id와 동일한 방법으로 가능한 범위내 tx_id가 없다면 에러처리
+      1. 가능한 tx_id가 없다면 에러처리 
    5. 뱅킹 API 통해서 이체 API(POST /transfer) 요청
       1. 응답이 오래 걸림
          2. record에 중단 거래로 기록
