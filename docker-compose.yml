@@ -15,7 +15,7 @@ services:
       - 8080:8080
     restart: on-failure
     volumes:
-      - ./logs:/logs
+      - ./docker-logs:/logs
     links:
       - db
     depends_on:

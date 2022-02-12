@@ -61,6 +61,9 @@ CI : Github Actions
 ## ERD
 
 ## 프로젝트 실행방법
+1. jar 파일 생성
+2. docker-compose up [-D]
+3. docker-compose down or ctrl + c
 
 ## API 명세
 
