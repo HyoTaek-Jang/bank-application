@@ -4,11 +4,9 @@
 ## 시스템 구성도
 Java, Spring Boot, MySQL
 
-CI : Github Actions
-
 코드관리 : Git, Github
 
-배포 : doker, docker-compose 사용, DB의 경우, prod와 test DB를 분리하여 사용하고자 함.
+배포 : dorker, docker-compose 사용, DB의 경우, local과 cloud DB를 분리하여 사용하고자 함.
 
 사용자 데이터, 은행 데이터는 data.sql로 삽입 예정 (사용자 5개, 은행 3개 초기 세팅)
 
@@ -53,6 +51,13 @@ CI : Github Actions
    2. 등록 계좌 ID가 8자리 숫자인지
    3. 등록된 계좌 ID가 유효한지 확인
    4. DB를 통해 거래 내역 조회
+
+---
+1. 스케줄러
+2. 인터셉터 (따로 인증 로직이 없으니까 user_id를 req body에 넣음)
+3. 테스트코드
+4. 특수 케이스 분리
+5. validation
 
 [comment]: <> (4. **최근 빈도 높은 이체 내역 조회** -> 추후 개발)
 
