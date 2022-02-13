@@ -10,12 +10,7 @@ import com.daagng.test.common.constants.WebClientConstant;
 public class WebClientConfig {
 
 	@Bean
-	public WebClient BankingWebClient() {
-		return WebClient.builder().baseUrl(WebClientConstant.BANKING_HOST).build();
-	}
-
-	@Bean
-	public WebClient TestWebClient() {
+	public WebClient WebClient() {
 		return WebClient.builder().baseUrl(WebClientConstant.TEST_HOST).build();
 	}
 }

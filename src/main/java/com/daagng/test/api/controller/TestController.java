@@ -8,12 +8,14 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import com.daagng.test.api.response.BankingHTTP.TestRes;
 
 import lombok.RequiredArgsConstructor;
+import reactor.core.publisher.Mono;
 
 @RestController
 @RequestMapping("test")
@@ -28,12 +30,14 @@ public class TestController {
 	}
 
 	@GetMapping("/test")
-	public void webClientTest() {
-		try {
-			testWebClient.get().uri("/todos/1").retrieve().bodyToMono(TestRes.class).timeout(Duration.ofSeconds(5));
-		} catch (TimeoutException e) {
-			System.out.println("timeout");
-		}
-
+	@ResponseBody
+	public TestRes webClientTest() {
+		TestRes timeout = testWebClient.get()
+			.uri("/todos/1")
+			.retrieve()
+			.bodyToMono(TestRes.class)
+			.timeout(Duration.ofSeconds(10))
+			.block();
+		return timeout;
 	}
 }
