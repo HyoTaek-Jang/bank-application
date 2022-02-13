@@ -6,6 +6,7 @@ import java.util.concurrent.TimeoutException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -32,12 +33,19 @@ public class TestController {
 	@GetMapping("/test")
 	@ResponseBody
 	public TestRes webClientTest() {
-		TestRes timeout = testWebClient.get()
-			.uri("/todos/1")
-			.retrieve()
-			.bodyToMono(TestRes.class)
-			.timeout(Duration.ofSeconds(10))
-			.block();
-		return timeout;
+		try {
+			TestRes asdf = testWebClient.get()
+				.uri("/todos/1")
+				.retrieve()
+				.onStatus(httpStatus -> httpStatus == HttpStatus.valueOf(400), clientResponse -> Mono.error(new RuntimeException()))
+				.bodyToMono(TestRes.class)
+				.timeout(Duration.ofSeconds(1))
+				.onErrorMap(TimeoutException.class, e -> new TimeoutException("timeout!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"))
+				.block();
+			return asdf;
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return null;
 	}
 }
