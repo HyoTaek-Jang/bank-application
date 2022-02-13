@@ -28,6 +28,8 @@ dependencies {
 
 //	for validation
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
+//	webclient
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
 }
 
 tasks.named('test') {

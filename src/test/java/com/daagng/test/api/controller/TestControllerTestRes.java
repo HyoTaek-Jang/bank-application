@@ -16,7 +16,7 @@ import com.daagng.test.db.entity.User;
 import com.daagng.test.db.repository.BankRepository;
 import com.daagng.test.db.repository.UserRepository;
 
-class TestControllerTest extends BaseTest {
+class TestControllerTestRes extends BaseTest {
 
 	@Autowired
 	private UserRepository userRepository;

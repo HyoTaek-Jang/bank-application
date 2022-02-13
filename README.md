@@ -67,7 +67,7 @@ Java, Spring Boot, MySQL
 
 ![ERD](./images/ERD.png)
 
-To-Do : 설명 달기
+To-Do : 설명 달기, 기본 삽입 데이터도 표현!
 
 ## 프로젝트 실행방법
 1. docker-compose up [-D]
