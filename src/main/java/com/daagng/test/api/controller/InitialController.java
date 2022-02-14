@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import com.daagng.test.api.response.BankingSystem.BankingSystemErrorResponse;
-import com.daagng.test.api.response.BankingSystem.TestRes;
+import com.daagng.test.api.response.bankingSystem.BankingSystemErrorResponse;
+import com.daagng.test.api.response.bankingSystem.TestRes;
 import com.daagng.test.common.constants.BankingConstant;
 import com.daagng.test.common.exception.BankingException;
 

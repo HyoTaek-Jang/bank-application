@@ -9,7 +9,7 @@ public class BankingConstant {
 	public static Integer BANK_SERVER_ERR = 500;
 
 	// 단위는 '초'이다.
-	public static Integer BANK_TIMEOUT = 3;
+	public static Integer BANK_TIMEOUT = 10;
 
 	public static Integer TRANSFER_SUCCESS = 0;
 	public static Integer TRANSFER_FAIL = 1;
