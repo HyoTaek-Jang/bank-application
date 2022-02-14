@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import com.daagng.test.api.response.BankingHTTP.TestRes;
+import com.daagng.test.common.util.HttpStatusPredicate;
 
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Mono;
@@ -34,15 +35,14 @@ public class TestController {
 	@ResponseBody
 	public TestRes webClientTest() {
 		try {
-			TestRes asdf = testWebClient.get()
+			return testWebClient.get()
 				.uri("/todos/1")
 				.retrieve()
-				.onStatus(httpStatus -> httpStatus == HttpStatus.valueOf(400), clientResponse -> Mono.error(new RuntimeException()))
+				.onStatus(httpStatus -> HttpStatusPredicate.test(httpStatus, 200), clientResponse -> Mono.error(new RuntimeException()))
 				.bodyToMono(TestRes.class)
 				.timeout(Duration.ofSeconds(1))
 				.onErrorMap(TimeoutException.class, e -> new TimeoutException("timeout!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"))
 				.block();
-			return asdf;
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}

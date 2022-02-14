@@ -20,7 +20,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Transfer extends BaseEntity{
 	@NotNull
-	private Long to_account_number;
+	private Long toAccountNumber;
 
 	// common - constants - TransferConstant 참조
 	@NotNull
@@ -28,10 +28,10 @@ public class Transfer extends BaseEntity{
 
 	@ManyToOne
 	@JoinColumn
-	private Bank to_bank;
+	private Bank toBank;
 
 	@ManyToOne
 	@JoinColumn
-	private Account from_account;
+	private Account fromAccount;
 
 }
