@@ -10,6 +10,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,7 +19,12 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class Account extends BaseEntity {
+	@NotNull
+	@Column(unique = true)
+	private Integer accountId;
+
 	// 은행 계좌 번호 10자리 숫자
 	@NotNull
 	@Column(unique = true)
@@ -40,5 +46,12 @@ public class Account extends BaseEntity {
 			transferList = new LinkedList<>();
 		transferList.add(transfer);
 		transfer.setFromAccount(this);
+	}
+
+	public Account(Integer accountId, Integer accountNumber, User user, Bank bank) {
+		this.accountId = accountId;
+		this.accountNumber = accountNumber;
+		this.user = user;
+		this.bank = bank;
 	}
 }

@@ -2,7 +2,6 @@ package com.daagng.test.common.exception;
 
 import java.util.Arrays;
 import java.util.Objects;
-import java.util.concurrent.TimeoutException;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +12,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import com.daagng.test.api.response.bankingSystem.BankingSystemErrorResponse;
 import com.daagng.test.api.response.BaseResponse;
 import com.daagng.test.common.constants.CommonConstant;
-import com.daagng.test.common.constants.bank.BankingConstant;
+import com.daagng.test.common.constants.bank.BankingSystemConstant;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -27,16 +26,16 @@ public class GlobalExceptionHandler {
 		return ResponseEntity.status(400).body(new BaseResponse(defaultMessage));
 	}
 
-	@ExceptionHandler(value = BankingException.class)
-	protected ResponseEntity<BaseResponse> handleBankingException(BankingException e) {
+	@ExceptionHandler(value = BankingSystemException.class)
+	protected ResponseEntity<BaseResponse> handleBankingException(BankingSystemException e) {
 		BankingSystemErrorResponse bankingSystemErrorResponse = e.getBankingSystemErrorResponse();
 		HttpStatus httpStatus = e.getHttpStatus();
 		return ResponseEntity.status(httpStatus.value()).body(new BaseResponse(bankingSystemErrorResponse.getMessage()));
 	}
 
-	@ExceptionHandler(value = TimeoutException.class)
-	protected ResponseEntity<BaseResponse> handleTimeoutException(TimeoutException e) {
-		return ResponseEntity.status(500).body(new BaseResponse(BankingConstant.LATE_RESPONSE_MSG));
+	@ExceptionHandler(value = BankingSystemTimeoutException.class)
+	protected ResponseEntity<BaseResponse> handleTimeoutException(BankingSystemTimeoutException e) {
+		return ResponseEntity.status(500).body(new BaseResponse(BankingSystemConstant.LATE_RESPONSE_MSG));
 	}
 
 	@ExceptionHandler(value = UnauthorizedException.class)

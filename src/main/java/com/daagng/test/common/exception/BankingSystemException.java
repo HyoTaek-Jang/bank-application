@@ -7,11 +7,11 @@ import com.daagng.test.api.response.bankingSystem.BankingSystemErrorResponse;
 import lombok.Getter;
 
 @Getter
-public class BankingException extends IllegalArgumentException{
+public class BankingSystemException extends IllegalArgumentException{
 	private final BankingSystemErrorResponse bankingSystemErrorResponse;
 	private final HttpStatus httpStatus;
 
-	public BankingException(BankingSystemErrorResponse body, HttpStatus httpStatus) {
+	public BankingSystemException(BankingSystemErrorResponse body, HttpStatus httpStatus) {
 		this.bankingSystemErrorResponse = body;
 		this.httpStatus = httpStatus;
 	}
