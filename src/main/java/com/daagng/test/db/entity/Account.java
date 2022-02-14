@@ -1,5 +1,7 @@
 package com.daagng.test.db.entity;
 
+import static com.daagng.test.common.constants.bank.RegisterConstant.*;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -9,6 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,13 +24,16 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Account extends BaseEntity {
+	// 뱅킹시스템 account id
 	@NotNull
 	@Column(unique = true)
+	@Size(max = ACCOUNT_ID_SIZE, min = ACCOUNT_ID_SIZE)
 	private Integer accountId;
 
-	// 은행 계좌 번호 10자리 숫자
+	// 은행 계좌 번호
 	@NotNull
 	@Column(unique = true)
+	@Size(max = ACCOUNT_NUMBER_SIZE, min = ACCOUNT_NUMBER_SIZE)
 	private Integer accountNumber;
 
 	@ManyToOne

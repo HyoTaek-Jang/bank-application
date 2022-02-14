@@ -9,6 +9,7 @@ import java.util.concurrent.TimeoutException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,6 +37,8 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("bank")
 @RequiredArgsConstructor
 public class BankController {
+	@Value("${isRealBankingSystem}")
+	boolean isRealBankingSystem;
 
 	private final BankService bankService;
 	private final AccountService accountService;
@@ -54,17 +57,23 @@ public class BankController {
 
 		if (accountService.findAccount(accountNumber) != null)
 			return ResponseEntity.status(400).body(new BaseResponse(EXIST_ACCOUNT_NUMBER));
-
-		BankingSystemRegisterResponse response = webClient.post()
-			.uri(REGISTER_PATH)
-			.retrieve()
-			.onStatus(HttpStatus::isError, clientResponse -> clientResponse.bodyToMono(BankingSystemErrorResponse.class)
-				.map(body -> new BankingSystemException(body, clientResponse.statusCode())))
-			.bodyToMono(BankingSystemRegisterResponse.class)
-			.timeout(Duration.ofSeconds(BANK_TIMEOUT))
-			.block();
+		
+		// TO-DO 타임아웃이랑 onStatus 정상작동 확인
+		BankingSystemRegisterResponse response;
+		if (isRealBankingSystem){
+			 response = webClient.post()
+				.uri(REGISTER_PATH)
+				.retrieve()
+				.onStatus(HttpStatus::isError, clientResponse -> clientResponse.bodyToMono(BankingSystemErrorResponse.class)
+					.map(body -> new BankingSystemException(body, clientResponse.statusCode())))
+				.bodyToMono(BankingSystemRegisterResponse.class)
+				.timeout(Duration.ofSeconds(BANK_TIMEOUT))
+				.block();
+		}else
+			response = new BankingSystemRegisterResponse(NumberUtil.makeRandomNumbers(ACCOUNT_ID_SIZE));
 
 		assert response != null;
+		// TO-DO 스트링으로 할지, 숫자로 할지
 		Account account = new Account(Integer.parseInt(response.getBank_account_id()), accountNumber, user, bank);
 		accountService.save(account);
 
