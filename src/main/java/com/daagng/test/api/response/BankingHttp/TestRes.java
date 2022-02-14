@@ -1,6 +1,5 @@
-package com.daagng.test.api.response.BankingHTTP;
+package com.daagng.test.api.response.BankingHttp;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

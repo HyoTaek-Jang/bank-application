@@ -3,11 +3,13 @@ package com.daagng.test.common.exception;
 import java.util.Arrays;
 import java.util.Objects;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.daagng.test.api.response.BankingHttp.BankingErrorResponse;
 import com.daagng.test.api.response.BaseResponse;
 
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +22,13 @@ public class GlobalExceptionHandler {
 	protected ResponseEntity<BaseResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
 		String defaultMessage = Objects.requireNonNull(e.getBindingResult().getAllErrors().get(0).getDefaultMessage());;
 		return ResponseEntity.status(400).body(new BaseResponse(defaultMessage));
+	}
+
+	@ExceptionHandler(value = BankingException.class)
+	protected ResponseEntity<BaseResponse> handleBankingException(BankingException e) {
+		BankingErrorResponse bankingErrorResponse = e.getBankingErrorResponse();
+		HttpStatus httpStatus = e.getHttpStatus();
+		return ResponseEntity.status(httpStatus.value()).body(new BaseResponse(bankingErrorResponse.getMessage()));
 	}
 
 	@ExceptionHandler(value = UnauthorizedException.class)
