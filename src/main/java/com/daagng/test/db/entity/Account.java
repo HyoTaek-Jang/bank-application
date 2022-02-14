@@ -32,13 +32,13 @@ public class Account extends BaseEntity {
 	@JoinColumn
 	private Bank bank;
 
-	@OneToMany(mappedBy = "from_account")
+	@OneToMany(mappedBy = "fromAccount")
 	private List<Transfer> transferList;
 
 	public void addTransfer(Transfer transfer) {
 		if (this.transferList == null)
 			transferList = new LinkedList<>();
 		transferList.add(transfer);
-		transfer.setFrom_account(this);
+		transfer.setFromAccount(this);
 	}
 }

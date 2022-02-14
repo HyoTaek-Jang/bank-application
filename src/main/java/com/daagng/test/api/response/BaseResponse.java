@@ -4,7 +4,7 @@ import lombok.Getter;
 
 @Getter
 public class BaseResponse {
-	String msg = null;
+	String msg;
 
 	public BaseResponse(String msg) {
 		this.msg = msg;

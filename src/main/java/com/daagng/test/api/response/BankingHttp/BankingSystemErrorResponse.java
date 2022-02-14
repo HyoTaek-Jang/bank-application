@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class BankingErrorResponse {
+public class BankingSystemErrorResponse {
 	private String code;
 	private String message;
 }

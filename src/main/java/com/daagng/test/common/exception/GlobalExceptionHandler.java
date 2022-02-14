@@ -2,6 +2,7 @@ package com.daagng.test.common.exception;
 
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.concurrent.TimeoutException;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,7 +10,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import com.daagng.test.api.response.BankingHttp.BankingErrorResponse;
+import com.daagng.test.api.response.BankingHttp.BankingSystemErrorResponse;
 import com.daagng.test.api.response.BaseResponse;
 
 import lombok.extern.slf4j.Slf4j;
@@ -26,9 +27,14 @@ public class GlobalExceptionHandler {
 
 	@ExceptionHandler(value = BankingException.class)
 	protected ResponseEntity<BaseResponse> handleBankingException(BankingException e) {
-		BankingErrorResponse bankingErrorResponse = e.getBankingErrorResponse();
+		BankingSystemErrorResponse bankingSystemErrorResponse = e.getBankingSystemErrorResponse();
 		HttpStatus httpStatus = e.getHttpStatus();
-		return ResponseEntity.status(httpStatus.value()).body(new BaseResponse(bankingErrorResponse.getMessage()));
+		return ResponseEntity.status(httpStatus.value()).body(new BaseResponse(bankingSystemErrorResponse.getMessage()));
+	}
+
+	@ExceptionHandler(value = TimeoutException.class)
+	protected ResponseEntity<BaseResponse> handleTimeoutException(TimeoutException e) {
+		return ResponseEntity.status(500).body(new BaseResponse("뱅킹 서비스의 요청이 지연되고 있습니다."));
 	}
 
 	@ExceptionHandler(value = UnauthorizedException.class)
@@ -38,6 +44,7 @@ public class GlobalExceptionHandler {
 
 	@ExceptionHandler(value = Exception.class)
 	public ResponseEntity<BaseResponse> handleException(Exception e) {
+		System.out.println(e.getClass());
 		log.error("Internal Error Trace : {} ", Arrays.toString(e.getStackTrace()));
 		log.error("Error Message : {}",e.getMessage());
 		return ResponseEntity.status(500).body(new BaseResponse(e.getMessage()));
