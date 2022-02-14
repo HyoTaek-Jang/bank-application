@@ -1,4 +1,4 @@
-package com.daagng.test.api.response.BankingHttp;
+package com.daagng.test.api.response.BankingSystem;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

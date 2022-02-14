@@ -21,8 +21,8 @@ public class AuthInterceptor implements AsyncHandlerInterceptor {
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
 		try {
-			Long user_id = Long.parseLong(request.getHeader("Authorization"));
-			User user = userService.findUser(user_id);
+			Long userId = Long.parseLong(request.getHeader("Authorization"));
+			User user = userService.findUser(userId);
 			if (user == null)
 				throw new UnauthorizedException();
 			request.setAttribute("user", user);

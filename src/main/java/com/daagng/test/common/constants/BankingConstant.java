@@ -2,6 +2,7 @@ package com.daagng.test.common.constants;
 
 public class BankingConstant {
 	public static String BANKING_SYSTEM_HOST = "https://banking-api.sample.com";
+	public static String TEST_HOST = "https://jsonplaceholder.typicode.com";
 
 	public static Integer BANK_USER_ERR = 400;
 	public static Integer BANK_ACCOUNT_ERR = 422;

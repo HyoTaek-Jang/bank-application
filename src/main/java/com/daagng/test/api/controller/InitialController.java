@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import com.daagng.test.api.response.BankingHttp.BankingSystemErrorResponse;
-import com.daagng.test.api.response.BankingHttp.TestRes;
+import com.daagng.test.api.response.BankingSystem.BankingSystemErrorResponse;
+import com.daagng.test.api.response.BankingSystem.TestRes;
 import com.daagng.test.common.constants.BankingConstant;
 import com.daagng.test.common.exception.BankingException;
 
@@ -19,7 +19,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("test")
 @RequiredArgsConstructor
-public class TestController {
+public class InitialController {
 
 	private final WebClient testWebClient;
 

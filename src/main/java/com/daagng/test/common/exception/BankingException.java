@@ -2,7 +2,7 @@ package com.daagng.test.common.exception;
 
 import org.springframework.http.HttpStatus;
 
-import com.daagng.test.api.response.BankingHttp.BankingSystemErrorResponse;
+import com.daagng.test.api.response.BankingSystem.BankingSystemErrorResponse;
 
 import lombok.Getter;
 
