@@ -11,7 +11,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import com.daagng.test.api.response.bankingSystem.BankingSystemErrorResponse;
 import com.daagng.test.api.response.bankingSystem.TestRes;
-import com.daagng.test.common.constants.BankingConstant;
+import com.daagng.test.common.constants.bank.BankingConstant;
 import com.daagng.test.common.exception.BankingException;
 
 import lombok.RequiredArgsConstructor;

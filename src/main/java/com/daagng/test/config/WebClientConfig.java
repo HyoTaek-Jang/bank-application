@@ -4,7 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import com.daagng.test.common.constants.BankingConstant;
+import com.daagng.test.common.constants.bank.BankingConstant;
 
 @Configuration
 public class WebClientConfig {

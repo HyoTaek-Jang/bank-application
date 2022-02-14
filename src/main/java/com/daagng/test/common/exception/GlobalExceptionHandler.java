@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.daagng.test.api.response.bankingSystem.BankingSystemErrorResponse;
 import com.daagng.test.api.response.BaseResponse;
+import com.daagng.test.common.constants.CommonConstant;
+import com.daagng.test.common.constants.bank.BankingConstant;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -34,12 +36,12 @@ public class GlobalExceptionHandler {
 
 	@ExceptionHandler(value = TimeoutException.class)
 	protected ResponseEntity<BaseResponse> handleTimeoutException(TimeoutException e) {
-		return ResponseEntity.status(500).body(new BaseResponse("뱅킹 서비스의 요청이 지연되고 있습니다."));
+		return ResponseEntity.status(500).body(new BaseResponse(BankingConstant.LATE_RESPONSE_MSG));
 	}
 
 	@ExceptionHandler(value = UnauthorizedException.class)
 	protected ResponseEntity<BaseResponse> unauthorizedException(UnauthorizedException e) {
-		return ResponseEntity.status(401).body(new BaseResponse("Authorization이 올바르지 않습니다."));
+		return ResponseEntity.status(401).body(new BaseResponse(CommonConstant.UNAUTHORIZATION_MSG));
 	}
 
 	@ExceptionHandler(value = Exception.class)

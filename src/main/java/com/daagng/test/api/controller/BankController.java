@@ -11,7 +11,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.daagng.test.api.request.bank.RegisterAccountRequest;
 import com.daagng.test.api.response.BaseResponse;
+import com.daagng.test.api.service.AccountService;
 import com.daagng.test.api.service.BankService;
+import com.daagng.test.common.constants.CommonConstant;
+import com.daagng.test.common.constants.bank.RegisterConstant;
 import com.daagng.test.common.util.NumberUtil;
 import com.daagng.test.db.entity.Bank;
 import com.daagng.test.db.entity.User;
@@ -24,6 +27,7 @@ import lombok.RequiredArgsConstructor;
 public class BankController {
 
 	private final BankService bankService;
+	private final AccountService accountService;
 
 	@PostMapping("/register")
 	public ResponseEntity<? extends BaseResponse> registerAccount(HttpServletRequest request,@Valid @RequestBody RegisterAccountRequest registerAccountRequest) {
@@ -36,7 +40,10 @@ public class BankController {
 		if (bank == null)
 			return ResponseEntity.status(400).body(new BaseResponse("존재하지 않는 은행코드입니다."));
 
-		System.out.println(registerAccountRequest.getAccountNumber());
+		if (accountService.findAccount(accountNumber) != null)
+			return ResponseEntity.status(400).body(new BaseResponse("이미 등록된 계좌번호입니다."));
+
+
 
 		return null;
 	}
