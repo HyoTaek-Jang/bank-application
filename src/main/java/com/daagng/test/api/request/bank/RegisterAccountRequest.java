@@ -3,9 +3,15 @@ package com.daagng.test.api.request.bank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class RegisterAccountRequest {
 	@NotNull
 	@Size(max = 4, min = 4, message = "은행코드는 4자리입니다.")

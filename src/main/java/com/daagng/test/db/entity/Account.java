@@ -22,7 +22,7 @@ public class Account extends BaseEntity {
 	// 은행 계좌 번호 10자리 숫자
 	@NotNull
 	@Column(unique = true)
-	private Long accountNumber;
+	private Integer accountNumber;
 
 	@ManyToOne
 	@JoinColumn
