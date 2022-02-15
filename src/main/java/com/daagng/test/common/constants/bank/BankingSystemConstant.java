@@ -11,6 +11,7 @@ public class BankingSystemConstant {
 	public static final Integer BANK_TIMEOUT = 5;
 
 	public static final String LATE_RESPONSE_MSG = "뱅킹 서비스의 요청이 지연되고 있습니다.";
+	public static final String WRONG_ACCOUNT_INFO = "잘못된 계좌 정보";
 
 	public static final String REGISTER_PATH = "/register";
 }

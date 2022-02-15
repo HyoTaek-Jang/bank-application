@@ -39,6 +39,7 @@ spring:
     password: sa
 
 ---
+isRealBankingSystem: false
 
 spring:
   config:

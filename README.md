@@ -71,8 +71,9 @@ To-Do : 설명 달기, 기본 삽입 데이터도 표현!
 
 ## 프로젝트 실행방법
 1. 실제 뱅킹 시스템을 사용하면 HOST와 application.yml에서 isReal true로 바꾸기
-2. docker-compose up [-D]
-3. docker-compose down or ctrl + c
+2. 로컬 실행을 원하면 application.yml 에서 test, default db 연결 코드 수정해야함. 유저네임 비번, 디비
+3. docker-compose up [-D]
+4. docker-compose down or ctrl + c
 
 ## API 명세
 

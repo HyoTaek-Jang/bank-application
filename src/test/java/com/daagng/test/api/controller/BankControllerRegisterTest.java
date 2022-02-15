@@ -1,6 +1,6 @@
 package com.daagng.test.api.controller;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static com.daagng.test.common.constants.bank.RegisterConstant.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -12,7 +12,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import com.daagng.test.BaseTest;
 import com.daagng.test.api.request.bank.RegisterAccountRequest;
 
-class BankControllerTest extends BaseTest {
+class BankControllerRegisterTest extends BaseTest {
 	@Test
 	@DisplayName("registerAccount API validation test - success")
 	void registerAccountValidationSuccessTest() throws Exception {
@@ -65,6 +65,24 @@ class BankControllerTest extends BaseTest {
 
 		//Then
 		authorization.andExpect(status().is4xxClientError());
+	}
+
+	@Test
+	@DisplayName("registerAccount API test - success")
+	void registerAccountSuccessTest() throws Exception {
+		//given
+		RegisterAccountRequest request = RegisterAccountRequest.builder()
+			.code("D001")
+			.accountNumber("1234567890")
+			.build();
+
+		//When
+		ResultActions authorization = this.mockMvc.perform(
+			post("/bank/register").header("Authorization", 1).contentType(MediaType.APPLICATION_JSON).content(
+				this.objectMapper.writeValueAsString(request)));
+
+		//Then
+		authorization.andExpect(status().is2xxSuccessful()).andExpect(jsonPath("message", String.class).value(SUCCESS_REGISTER));
 	}
 
 }
