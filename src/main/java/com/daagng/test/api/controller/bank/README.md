@@ -1,5 +1,5 @@
-
-### [register account](#register account)
+## Index
+### [registerAccount](#registerAccount)
 
 ## 뱅킹 시스템 API를 연동해서 사용자끼리 계좌이체를 할 수 있는 API Router입니다.
 
@@ -7,7 +7,7 @@
 
 `http://localhost:8080/bank`
 
-## register account
+## registerAccount
 
 ### description
 
@@ -56,9 +56,9 @@
  ```
 
 - | Field                          | Type    | Description                  |
-      | ------------------------------ | ------- | ---------------------------- |
-  | message                        | String | 요청 응답에 대한 메시지               |
-  | accountId                         | String  | 발급받은 account id                  |
+  | ------------------------------ | ------- | ---------------------------- |
+  | message                        | String | 요청 응답에 대한 메시지          |
+  | accountId                      | String  | 발급받은 account id           |
 
 - fail
 ```
