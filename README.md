@@ -70,8 +70,9 @@ Java, Spring Boot, MySQL
 To-Do : 설명 달기, 기본 삽입 데이터도 표현!
 
 ## 프로젝트 실행방법
-1. docker-compose up [-D]
-2. docker-compose down or ctrl + c
+1. 실제 뱅킹 시스템을 사용하면 HOST와 application.yml에서 isReal true로 바꾸기
+2. docker-compose up [-D]
+3. docker-compose down or ctrl + c
 
 ## API 명세
 
