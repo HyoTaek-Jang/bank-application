@@ -9,5 +9,7 @@ import com.daagng.test.db.entity.Account;
 
 @Repository
 public interface AccountRepository extends JpaRepository<Account, Long> {
-	Optional<Account> findByAccountNumber(Integer accountNumber);
+	Optional<Account> findByAccountNumber(Long accountNumber);
+
+	Optional<Account> findByAccountId(Long accountId);
 }

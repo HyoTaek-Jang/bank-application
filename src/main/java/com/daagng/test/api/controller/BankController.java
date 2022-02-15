@@ -50,12 +50,12 @@ public class BankController {
 
 		if (!NumberUtil.isNumberic(registerAccountRequest.getAccountNumber()))
 			return ResponseEntity.status(400).body(new BaseResponse(ACCOUNT_NUMBER_SIZE_MSG));
-		Integer accountNumber = Integer.parseInt(registerAccountRequest.getAccountNumber());
+		Long accountNumber = Long.parseLong(registerAccountRequest.getAccountNumber());
 		Bank bank = bankService.findBank(registerAccountRequest.getCode());
 		if (bank == null)
 			return ResponseEntity.status(400).body(new BaseResponse(NOT_EXIST_CODE));
 
-		if (accountService.findAccount(accountNumber) != null)
+		if (accountService.findAccountByAccountNumber(accountNumber) != null)
 			return ResponseEntity.status(400).body(new BaseResponse(EXIST_ACCOUNT_NUMBER));
 		
 		// TODO 타임아웃이랑 onStatus 정상작동 확인
@@ -69,12 +69,18 @@ public class BankController {
 				.bodyToMono(BankingSystemRegisterResponse.class)
 				.timeout(Duration.ofSeconds(BANK_TIMEOUT))
 				.block();
-		}else
+		}else{
+			// 뱅킹시스템이 작동을 안한다면, 정상적으로 작동이 됐다고 가정하고, 현재 존재하지 않는 랜덤한 Account Id를 제공 받는다.
+			Account existAccount = new Account();
+			while (existAccount != null) {
+				String temp = NumberUtil.makeRandomNumbers(ACCOUNT_ID_SIZE);
+				existAccount = accountService.findAccountByAccountId(Long.parseLong(temp));
+			}
 			response = new BankingSystemRegisterResponse(NumberUtil.makeRandomNumbers(ACCOUNT_ID_SIZE));
+		}
 
 		assert response != null;
-
-		Account account = new Account(Integer.parseInt(response.getBank_account_id()), accountNumber, user, bank);
+		Account account = new Account(Long.parseLong(response.getBank_account_id()), accountNumber, user, bank);
 		accountService.save(account);
 
 		return ResponseEntity.status(201).body(new RegisterAccountResponse(response.getBank_account_id(), SUCCESS_REGISTER));

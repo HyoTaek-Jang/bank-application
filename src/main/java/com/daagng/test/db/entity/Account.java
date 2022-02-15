@@ -12,6 +12,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.DecimalMax;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -30,14 +33,16 @@ public class Account extends BaseEntity {
 	// 뱅킹시스템 account id
 	@NotNull
 	@Column(unique = true)
-	@Size(max = ACCOUNT_ID_SIZE, min = ACCOUNT_ID_SIZE)
-	private Integer accountId;
+	@DecimalMax(ACCOUNT_ID_MAX_NUMBER)
+	@Min(MIN_NUMBER)
+	private Long accountId;
 
 	// 은행 계좌 번호
 	@NotNull
 	@Column(unique = true)
-	@Size(max = ACCOUNT_NUMBER_SIZE, min = ACCOUNT_NUMBER_SIZE)
-	private Integer accountNumber;
+	@DecimalMax(ACCOUNT_NUMBER_MAX_NUMBER)
+	@Min(MIN_NUMBER)
+	private Long accountNumber;
 
 	@ManyToOne
 	@JoinColumn
@@ -57,7 +62,7 @@ public class Account extends BaseEntity {
 		transfer.setFromAccount(this);
 	}
 
-	public Account(Integer accountId, Integer accountNumber, User user, Bank bank) {
+	public Account(Long accountId, Long accountNumber, User user, Bank bank) {
 		this.accountId = accountId;
 		this.accountNumber = accountNumber;
 		this.user = user;

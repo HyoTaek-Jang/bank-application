@@ -13,11 +13,15 @@ public class AccountService {
 
 	private final AccountRepository accountRepository;
 
-	public Account findAccount(Integer accountNumber) {
+	public Account findAccountByAccountNumber(Long accountNumber) {
 		return accountRepository.findByAccountNumber(accountNumber).orElse(null);
 	}
 
 	public Account save(Account account) {
 		return accountRepository.save(account);
+	}
+
+	public Account findAccountByAccountId(Long accountId) {
+		return accountRepository.findByAccountId(accountId).orElse(null);
 	}
 }
