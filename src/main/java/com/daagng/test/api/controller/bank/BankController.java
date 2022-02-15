@@ -1,4 +1,4 @@
-package com.daagng.test.api.controller;
+package com.daagng.test.api.controller.bank;
 
 import static com.daagng.test.common.constants.bank.BankingSystemConstant.*;
 import static com.daagng.test.common.constants.bank.RegisterConstant.*;

@@ -28,9 +28,8 @@ Java, Spring Boot, MySQL
    2. 기존 등록된 계좌인지 확인
    3. 뱅킹 시스템을 활용하여 계좌등록 (POST /register)
       1. 200 응답 시, DB에 사용자 계좌등록
-         2. 가능한 ID가 없다면 에러처리 
-         3. 등록된 계좌 ID는 유니크 8자리의 숫자
-         4. 클라이언트 정상 값 반환
+         1. 등록된 계좌 ID는 유니크 8자리의 숫자
+         2. 클라이언트 정상 값 반환
       2. 타 status code 응답 시, 에러 핸들링 및 클라이언트에 반환
 3. **등록된 계좌를 통해 타 계좌번호로 이체**
    1. 입력값 validation
@@ -67,7 +66,7 @@ Java, Spring Boot, MySQL
 
 ![ERD](./images/ERD.png)
 
-To-Do : 설명 달기, 기본 삽입 데이터도 표현!
+TODO : 설명 달기, 기본 삽입 데이터도 표현!, erd 업데이트 
 
 ## 프로젝트 실행방법
 1. 실제 뱅킹 시스템을 사용하면 HOST와 application.yml에서 isReal true로 바꾸기
@@ -76,5 +75,6 @@ To-Do : 설명 달기, 기본 삽입 데이터도 표현!
 4. docker-compose down or ctrl + c
 
 ## API 명세
+### [API 명세 확인하기](./src/main/java/com/daagng/test/api/controller/bank/README.md)
 
 ## 문제해결전략
