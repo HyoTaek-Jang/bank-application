@@ -4,6 +4,7 @@ import static com.daagng.test.common.constants.bank.BankingSystemConstant.*;
 import static com.daagng.test.common.constants.bank.RegisterConstant.*;
 
 import java.time.Duration;
+import java.util.Objects;
 import java.util.concurrent.TimeoutException;
 
 import javax.servlet.http.HttpServletRequest;
@@ -19,12 +20,14 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import com.daagng.test.api.request.bank.RegisterAccountRequest;
+import com.daagng.test.api.request.bank.TransferMoneyRequest;
 import com.daagng.test.api.response.BaseResponse;
 import com.daagng.test.api.response.bank.RegisterAccountResponse;
 import com.daagng.test.api.response.bankingSystem.BankingSystemErrorResponse;
 import com.daagng.test.api.response.bankingSystem.BankingSystemRegisterResponse;
 import com.daagng.test.api.service.AccountService;
 import com.daagng.test.api.service.BankService;
+import com.daagng.test.api.service.ValidationService;
 import com.daagng.test.common.exception.BankingSystemException;
 import com.daagng.test.common.util.NumberUtil;
 import com.daagng.test.db.entity.Account;
@@ -43,22 +46,18 @@ public class BankController {
 	private final BankService bankService;
 	private final AccountService accountService;
 	private final WebClient webClient;
+	private final ValidationService validationService;
 
 	@PostMapping("/register")
 	public ResponseEntity<? extends BaseResponse> registerAccount(HttpServletRequest request,@Valid @RequestBody RegisterAccountRequest registerAccountRequest) {
 		User user = (User)request.getAttribute("user");
 
-		if (!NumberUtil.isNumberic(registerAccountRequest.getAccountNumber()))
-			return ResponseEntity.status(400).body(new BaseResponse(ACCOUNT_NUMBER_SIZE_MSG));
-		Long accountNumber = Long.parseLong(registerAccountRequest.getAccountNumber());
-		Bank bank = bankService.findBank(registerAccountRequest.getCode());
-		if (bank == null)
-			return ResponseEntity.status(400).body(new BaseResponse(NOT_EXIST_CODE));
-
+		// request 유효성 검사
+		Long accountNumber = validationService.numbericTest(registerAccountRequest.getAccountNumber(), ACCOUNT_NUMBER_SIZE_MSG);
+		Bank bank = validationService.bankCodeTest(registerAccountRequest.getCode(), NOT_EXIST_CODE);
 		if (accountService.findAccountByAccountNumber(accountNumber) != null)
 			return ResponseEntity.status(400).body(new BaseResponse(EXIST_ACCOUNT_NUMBER));
 		
-		// TODO 타임아웃이랑 onStatus 정상작동 확인
 		BankingSystemRegisterResponse response;
 		if (isRealBankingSystem){
 			 response = webClient.post()
@@ -84,5 +83,21 @@ public class BankController {
 		accountService.save(account);
 
 		return ResponseEntity.status(201).body(new RegisterAccountResponse(response.getBank_account_id(), SUCCESS_REGISTER));
+	}
+
+	@PostMapping("/transfer")
+	public ResponseEntity<? extends BaseResponse> transferMoney(HttpServletRequest request, @Valid @RequestBody
+		TransferMoneyRequest moneyRequest) {
+		User user = (User)request.getAttribute("user");
+
+		// request 유효성 검사
+		Long toAccountNumber = validationService.numbericTest(moneyRequest.getToAccountNumber(), ACCOUNT_NUMBER_SIZE_MSG);
+		Long fromAccountId = validationService.numbericTest(moneyRequest.getFromAccountId(), ACCOUNT_ID_SIZE_MSG);
+		Bank bank = validationService.bankCodeTest(moneyRequest.getToCode(), NOT_EXIST_CODE);
+		Account fromAccount = accountService.findAccountByAccountId(fromAccountId);
+		if (fromAccount == null || !Objects.equals(fromAccount.getUser().getId(), user.getId()))
+			return ResponseEntity.status(400).body(new BaseResponse(NOT_MATCHING_USER));
+
+		return null;
 	}
 }

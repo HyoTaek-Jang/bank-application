@@ -25,12 +25,16 @@ public class GlobalExceptionHandler {
 		String defaultMessage = Objects.requireNonNull(e.getBindingResult().getAllErrors().get(0).getDefaultMessage());;
 		return ResponseEntity.status(400).body(new BaseResponse(defaultMessage));
 	}
-
 	@ExceptionHandler(value = BankingSystemException.class)
 	protected ResponseEntity<BaseResponse> handleBankingException(BankingSystemException e) {
 		BankingSystemErrorResponse bankingSystemErrorResponse = e.getBankingSystemErrorResponse();
 		HttpStatus httpStatus = e.getHttpStatus();
 		return ResponseEntity.status(httpStatus.value()).body(new BaseResponse(bankingSystemErrorResponse.getMessage()));
+	}
+
+	@ExceptionHandler(value = CustomValidException.class)
+	protected ResponseEntity<BaseResponse> handleCustomValidException(CustomValidException e) {
+		return ResponseEntity.status(e.getStatus()).body(new BaseResponse(e.getMessage()));
 	}
 
 	@ExceptionHandler(value = BankingSystemTimeoutException.class)
