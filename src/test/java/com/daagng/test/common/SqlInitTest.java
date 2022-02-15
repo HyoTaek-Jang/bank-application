@@ -12,10 +12,14 @@ import com.daagng.test.db.repository.BankRepository;
 import com.daagng.test.db.repository.UserRepository;
 
 public class SqlInitTest extends BaseTest {
+	private final UserRepository userRepository;
+	private final BankRepository bankRepository;
+
 	@Autowired
-	private UserRepository userRepository;
-	@Autowired
-	private BankRepository bankRepository;
+	public SqlInitTest(UserRepository userRepository, BankRepository bankRepository) {
+		this.userRepository = userRepository;
+		this.bankRepository = bankRepository;
+	}
 
 	@Test
 	@DisplayName("SQL init test")

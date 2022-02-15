@@ -40,11 +40,13 @@ Java, Spring Boot, MySQL
    3. 지연 거래 내역이 존재하는지 확인
    4. tx_id 생성
       1. 가능한 tx_id가 없다면 에러처리 
-   5. 뱅킹 API 통해서 이체 API(POST /transfer) 요청
+   5. record 생성 - waiting
+   6. 뱅킹 API 통해서 이체 API(POST /transfer) 요청
       1. 응답이 오래 걸림
-         2. record에 중단 거래로 기록
          3. 클라이언트에 지연 응답 반환
-      2. 실패든, 성공이든 모든 기록을 record에 남기고 후처리 및 클라이언트 반환
+      2. 응답 성공
+         1. record 업데이트
+         2. 에러 핸들링 혹은 성공코드 클라이언트 반환
 4. **계좌 거래 내역 조회**
    1. 입력값 validation
    2. 등록 계좌 ID가 8자리 숫자인지
