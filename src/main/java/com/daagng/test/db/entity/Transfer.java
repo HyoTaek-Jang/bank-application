@@ -22,6 +22,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class Transfer extends BaseEntity{
 	@NotNull
 	@DecimalMax(ACCOUNT_NUMBER_MAX_NUMBER)

@@ -9,6 +9,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class BankingSystemRegisterResponse {
-	private Long bank_account_id;
+public class BankingSystemTransferResponse {
+	private Long tx_id;
+	private Long bank_tx_id;
+	private String result;
 }

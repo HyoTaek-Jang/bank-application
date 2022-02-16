@@ -26,6 +26,7 @@ import com.daagng.test.api.response.BaseResponse;
 import com.daagng.test.api.response.bank.RegisterAccountResponse;
 import com.daagng.test.api.response.bankingSystem.BankingSystemErrorResponse;
 import com.daagng.test.api.response.bankingSystem.BankingSystemRegisterResponse;
+import com.daagng.test.api.response.bankingSystem.BankingSystemTransferResponse;
 import com.daagng.test.api.service.AccountService;
 import com.daagng.test.api.service.BankService;
 import com.daagng.test.api.service.TransferService;
@@ -59,7 +60,7 @@ public class BankController {
 		Long accountNumber = validationService.numbericTest(registerAccountRequest.getAccountNumber(), ACCOUNT_NUMBER_SIZE_MSG);
 		Bank bank = validationService.bankCodeTest(registerAccountRequest.getCode(), NOT_EXIST_CODE);
 		if (accountService.findAccountByAccountNumber(accountNumber) != null)
-			return ResponseEntity.status(400).body(new BaseResponse(EXIST_ACCOUNT_NUMBER));
+			return ResponseEntity.status(422).body(new BaseResponse(EXIST_ACCOUNT_NUMBER));
 		
 		BankingSystemRegisterResponse response;
 		if (isRealBankingSystem){
@@ -74,18 +75,19 @@ public class BankController {
 		}else{
 			// 뱅킹시스템이 작동을 안한다면, 정상적으로 작동이 됐다고 가정하고, 현재 존재하지 않는 랜덤한 Account Id를 제공 받는다.
 			Account existAccount = new Account();
+			Long temp = null;
 			while (existAccount != null) {
-				String temp = NumberUtil.makeRandomNumbers(ACCOUNT_ID_SIZE);
-				existAccount = accountService.findAccountByAccountId(Long.parseLong(temp));
+				temp = Long.parseLong(NumberUtil.makeRandomNumbers(ACCOUNT_ID_SIZE));
+				existAccount = accountService.findAccountByAccountId(temp);
 			}
-			response = new BankingSystemRegisterResponse(NumberUtil.makeRandomNumbers(ACCOUNT_ID_SIZE));
+			response = new BankingSystemRegisterResponse(temp);
 		}
 
 		assert response != null;
-		Account account = new Account(Long.parseLong(response.getBank_account_id()), accountNumber, user, bank);
+		Account account = new Account(response.getBank_account_id(), accountNumber, user, bank);
 		accountService.save(account);
 
-		return ResponseEntity.status(201).body(new RegisterAccountResponse(response.getBank_account_id(), SUCCESS_REGISTER));
+		return ResponseEntity.status(201).body(new RegisterAccountResponse(String.format("%0"+ACCOUNT_ID_SIZE+"d", response.getBank_account_id()), SUCCESS_REGISTER));
 	}
 
 	@PostMapping("/transfer")
@@ -100,13 +102,29 @@ public class BankController {
 		Bank bank = validationService.bankCodeTest(moneyRequest.getToCode(), NOT_EXIST_CODE);
 		Account fromAccount = accountService.findAccountByAccountId(fromAccountId);
 		if (fromAccount == null || !Objects.equals(fromAccount.getUser().getId(), user.getId()))
-			return ResponseEntity.status(400).body(new BaseResponse(NOT_MATCHING_USER));
+			return ResponseEntity.status(422).body(new BaseResponse(NOT_MATCHING_USER));
 
 		// 지연 거래 내역 조회
 		if(transferService.findByAccountAndState(fromAccount, TRANSFER_WAITING)!=null)
-			return ResponseEntity.status(400).body(new BaseResponse(EXIST_WAITING_TRANSFER));
+			return ResponseEntity.status(422).body(new BaseResponse(EXIST_WAITING_TRANSFER));
 
+		Long lastPK = transferService.findLastPK();
+		if (lastPK == null)
+			return ResponseEntity.status(422).body(new BaseResponse(FULL_TX_ID));
 
+		Transfer transfer = new Transfer(toAccountNumber, TRANSFER_WAITING, moneyRequest.getAmount(), bank,
+			fromAccount);
+		transferService.save(transfer);
+
+		//TODO 뱅킹 API 호출
+		webClient.post()
+			.uri(REGISTER_PATH)
+			.retrieve()
+			.onStatus(HttpStatus::isError, clientResponse -> clientResponse.bodyToMono(BankingSystemErrorResponse.class)
+				.map(body -> new BankingSystemException(body, clientResponse.statusCode())))
+			.bodyToMono(BankingSystemTransferResponse.class)
+			.timeout(Duration.ofSeconds(BANK_TIMEOUT))
+			.block();
 
 		return null;
 	}

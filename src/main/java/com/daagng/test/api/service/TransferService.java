@@ -1,5 +1,7 @@
 package com.daagng.test.api.service;
 
+import static com.daagng.test.common.constants.bank.TransferConstant.*;
+
 import org.springframework.stereotype.Service;
 
 import com.daagng.test.db.entity.Account;
@@ -19,6 +21,13 @@ public class TransferService {
 	}
 
 	public Long findLastPK() {
-		Long aLong = transferRepository.findLastPK().orElse(-1L);
+		Long lastId = transferRepository.findLastPK().orElse(-1L);
+		if (lastId >= MAX_TX_ID_NUMBER)
+			return null;
+		return lastId;
+	}
+
+	public Transfer save(Transfer transfer) {
+		return transferRepository.save(transfer);
 	}
 }
