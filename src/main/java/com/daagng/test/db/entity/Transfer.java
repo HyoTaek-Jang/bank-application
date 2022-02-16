@@ -32,6 +32,9 @@ public class Transfer extends BaseEntity{
 	@NotNull
 	private Integer state;
 
+	@NotNull
+	private Long amount;
+
 	@ManyToOne
 	@JoinColumn
 	private Bank toBank;

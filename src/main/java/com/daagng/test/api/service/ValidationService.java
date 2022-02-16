@@ -1,14 +1,9 @@
 package com.daagng.test.api.service;
 
-import static com.daagng.test.common.constants.bank.RegisterConstant.*;
-
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.daagng.test.api.response.BaseResponse;
 import com.daagng.test.common.exception.CustomValidException;
 import com.daagng.test.common.util.NumberUtil;
-import com.daagng.test.db.entity.Account;
 import com.daagng.test.db.entity.Bank;
 
 import lombok.RequiredArgsConstructor;

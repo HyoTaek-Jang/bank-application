@@ -2,6 +2,7 @@ package com.daagng.test.api.controller.bank;
 
 import static com.daagng.test.common.constants.bank.BankingSystemConstant.*;
 import static com.daagng.test.common.constants.bank.RegisterConstant.*;
+import static com.daagng.test.common.constants.bank.TransferConstant.*;
 
 import java.time.Duration;
 import java.util.Objects;
@@ -27,11 +28,13 @@ import com.daagng.test.api.response.bankingSystem.BankingSystemErrorResponse;
 import com.daagng.test.api.response.bankingSystem.BankingSystemRegisterResponse;
 import com.daagng.test.api.service.AccountService;
 import com.daagng.test.api.service.BankService;
+import com.daagng.test.api.service.TransferService;
 import com.daagng.test.api.service.ValidationService;
 import com.daagng.test.common.exception.BankingSystemException;
 import com.daagng.test.common.util.NumberUtil;
 import com.daagng.test.db.entity.Account;
 import com.daagng.test.db.entity.Bank;
+import com.daagng.test.db.entity.Transfer;
 import com.daagng.test.db.entity.User;
 
 import lombok.RequiredArgsConstructor;
@@ -43,10 +46,10 @@ public class BankController {
 	@Value("${isRealBankingSystem}")
 	boolean isRealBankingSystem;
 
-	private final BankService bankService;
 	private final AccountService accountService;
 	private final WebClient webClient;
 	private final ValidationService validationService;
+	private final TransferService transferService;
 
 	@PostMapping("/register")
 	public ResponseEntity<? extends BaseResponse> registerAccount(HttpServletRequest request,@Valid @RequestBody RegisterAccountRequest registerAccountRequest) {
@@ -91,12 +94,19 @@ public class BankController {
 		User user = (User)request.getAttribute("user");
 
 		// request 유효성 검사
+		//TODO 등록된 계좌 사용자 테스트
 		Long toAccountNumber = validationService.numbericTest(moneyRequest.getToAccountNumber(), ACCOUNT_NUMBER_SIZE_MSG);
 		Long fromAccountId = validationService.numbericTest(moneyRequest.getFromAccountId(), ACCOUNT_ID_SIZE_MSG);
 		Bank bank = validationService.bankCodeTest(moneyRequest.getToCode(), NOT_EXIST_CODE);
 		Account fromAccount = accountService.findAccountByAccountId(fromAccountId);
 		if (fromAccount == null || !Objects.equals(fromAccount.getUser().getId(), user.getId()))
 			return ResponseEntity.status(400).body(new BaseResponse(NOT_MATCHING_USER));
+
+		// 지연 거래 내역 조회
+		if(transferService.findByAccountAndState(fromAccount, TRANSFER_WAITING)!=null)
+			return ResponseEntity.status(400).body(new BaseResponse(EXIST_WAITING_TRANSFER));
+
+
 
 		return null;
 	}

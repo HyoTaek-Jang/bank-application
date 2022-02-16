@@ -1,0 +1,24 @@
+package com.daagng.test.api.service;
+
+import org.springframework.stereotype.Service;
+
+import com.daagng.test.db.entity.Account;
+import com.daagng.test.db.entity.Transfer;
+import com.daagng.test.db.repository.TransferRepository;
+
+import lombok.RequiredArgsConstructor;
+
+@Service
+@RequiredArgsConstructor
+public class TransferService {
+
+	private final TransferRepository transferRepository;
+
+	public Transfer findByAccountAndState(Account fromAccount, Integer state) {
+		return transferRepository.findByFromAccountAndState(fromAccount, state).orElse(null);
+	}
+
+	public Long findLastPK() {
+		Long aLong = transferRepository.findLastPK().orElse(-1L);
+	}
+}
