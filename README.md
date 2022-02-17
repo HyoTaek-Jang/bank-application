@@ -6,9 +6,9 @@ Java, Spring Boot, MySQL
 
 코드관리 : Git, Github
 
-배포 : dorker, docker-compose 사용, DB의 경우, local과 cloud DB를 분리하여 사용하고자 함.
+배포 : docker, docker-compose 사용, DB의 경우, local과 cloud DB를 분리하여 사용하고자 함.
 
-사용자 데이터, 은행 데이터는 data.sql로 삽입 예정 (사용자 5개, 은행 3개 초기 세팅)
+사용자 데이터, 은행 데이터는 data.sql로 삽입 예정 (사용자 5개, 은행 3개, account 1개 초기 세팅)
 
 ## 기능정리
 
@@ -55,12 +55,6 @@ Java, Spring Boot, MySQL
 
 ---
 1. 스케줄러
-2. 인터셉터 (따로 인증 로직이 없으니까 user_id를 req body에 넣음)
-3. 테스트코드
-4. 특수 케이스 분리
-5. validation
-
-[comment]: <> (4. **최근 빈도 높은 이체 내역 조회** -> 추후 개발)
 
 ## 프로젝트 구조
 

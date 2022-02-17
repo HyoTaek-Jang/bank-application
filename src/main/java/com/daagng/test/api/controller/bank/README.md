@@ -4,13 +4,13 @@
 
 **[transferMoney](#transferMoney)**
 
-### 뱅킹 시스템 API를 연동해서 사용자끼리 계좌이체를 할 수 있는 Controller입니다.
+## 뱅킹 시스템 API를 연동해서 사용자끼리 계좌이체를 할 수 있는 Controller입니다.
 
 ### Base URL
 
 `http://localhost:8080/bank`
 
-### registerAccount
+## registerAccount
 
 ### description
 
@@ -95,7 +95,7 @@
 }
 ```
 
-### transferMoney
+## transferMoney
 
 ### description
 
