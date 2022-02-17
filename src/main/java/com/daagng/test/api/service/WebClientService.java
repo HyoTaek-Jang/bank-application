@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import com.daagng.test.api.response.bankingSystem.BankingSystemErrorResponse;
-import com.daagng.test.api.response.bankingSystem.BankingSystemRegisterResponse;
 import com.daagng.test.common.exception.BankingSystemException;
 
 import lombok.RequiredArgsConstructor;
@@ -21,7 +20,7 @@ public class WebClientService {
 
 	private final WebClient webClient;
 
-	public <T>T postRequest(Class<T> responseType, Object requestBody, String path) {
+	public <T>T bankingServicePost(Class<T> responseType, Object requestBody, String path) {
 		return webClient.post()
 			.uri(path)
 			.contentType(MediaType.APPLICATION_JSON)

@@ -6,7 +6,7 @@ import lombok.Getter;
 
 @Getter
 public class RegisterAccountResponse extends BaseResponse {
-	private String accountId;
+	private final String accountId;
 
 	public RegisterAccountResponse(String accountId, String msg) {
 		super(msg);

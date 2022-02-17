@@ -27,6 +27,7 @@ import com.daagng.test.api.request.bankingSystem.BankingSystemRegisterRequest;
 import com.daagng.test.api.request.bankingSystem.BankingSystemTransferRequest;
 import com.daagng.test.api.response.BaseResponse;
 import com.daagng.test.api.response.bank.RegisterAccountResponse;
+import com.daagng.test.api.response.bank.TransferResponse;
 import com.daagng.test.api.response.bankingSystem.BankingSystemErrorResponse;
 import com.daagng.test.api.response.bankingSystem.BankingSystemRegisterResponse;
 import com.daagng.test.api.response.bankingSystem.BankingSystemTransferResponse;
@@ -72,21 +73,20 @@ public class BankController {
 			registerAccountRequest.getAccountNumber());
 		BankingSystemRegisterResponse response;
 		if (isRealBankingSystem) {
-			response = webClientService.postRequest(BankingSystemRegisterResponse.class,
+			response = webClientService.bankingServicePost(BankingSystemRegisterResponse.class,
 				bankingSystemRegisterRequest,
 				REGISTER_PATH);
 		} else {
 			// 뱅킹시스템이 작동을 안한다면, 정상적으로 작동이 됐다고 가정하고, 현재 존재하지 않는 랜덤한 Account Id를 제공 받는다.
 			Account existAccount = new Account();
-			Long temp = null;
+			Long accountId = null;
 			while (existAccount != null) {
-				temp = Long.parseLong(NumberUtil.makeRandomNumbers(ACCOUNT_ID_SIZE));
-				existAccount = accountService.findAccountByAccountId(temp);
+				accountId = Long.parseLong(NumberUtil.makeRandomNumbers(ACCOUNT_ID_SIZE));
+				existAccount = accountService.findAccountByAccountId(accountId);
 			}
-			response = new BankingSystemRegisterResponse(temp);
+			response = new BankingSystemRegisterResponse(accountId);
 		}
 
-		assert response != null;
 		Account account = new Account(response.getBank_account_id(), accountNumber, user, bank);
 		accountService.save(account);
 
@@ -102,8 +102,6 @@ public class BankController {
 		User user = (User)request.getAttribute("user");
 
 		// request 유효성 검사
-		//TODO 유효성 검사 서비스나 validation 서비스로 분리
-		//TODO 등록된 계좌 사용자 테스트
 		Long toAccountNumber = validationService.numbericTest(moneyRequest.getToAccountNumber(),
 			ACCOUNT_NUMBER_SIZE_MSG);
 		Long fromAccountId = validationService.numbericTest(moneyRequest.getFromAccountId(), ACCOUNT_ID_SIZE_MSG);
@@ -116,25 +114,30 @@ public class BankController {
 		if (transferService.findByAccountAndState(fromAccount, TRANSFER_WAITING) != null)
 			return ResponseEntity.status(409).body(new BaseResponse(EXIST_WAITING_TRANSFER));
 
-		Long txId = transferService.findTxId();
-		if (txId == null)
+		if (transferService.findTxId() == null)
 			return ResponseEntity.status(409).body(new BaseResponse(FULL_TX_ID));
 
-		Transfer transfer = new Transfer(toAccountNumber, TRANSFER_WAITING, moneyRequest.getAmount(), bank,
+		// 기본 값으로 대기 상태로 transfer 생성
+		Transfer transfer = new Transfer(toAccountNumber, TRANSFER_WAITING, moneyRequest.getAmount(), null, bank,
 			fromAccount);
 		transferService.save(transfer);
 
-		BankingSystemTransferRequest bankingSystemTransferRequest = new BankingSystemTransferRequest(txId,
+		BankingSystemTransferRequest bankingSystemTransferRequest = new BankingSystemTransferRequest(transfer.getId(),
 			fromAccountId,
 			bank.getCode(), moneyRequest.getToAccountNumber(), moneyRequest.getAmount());
 		BankingSystemTransferResponse response;
 		if (isRealBankingSystem) {
-			response = webClientService.postRequest(BankingSystemTransferResponse.class, bankingSystemTransferRequest,
+			response = webClientService.bankingServicePost(BankingSystemTransferResponse.class, bankingSystemTransferRequest,
 				TRANSFER_PATH);
 		} else {
-
+			// 뱅킹시스템이 작동을 안한다면, 시간 초과 없이 정상 동작 반환을 받는다고 가정
+			Long bankTxId = Long.parseLong(NumberUtil.makeRandomNumbers(TX_ID_SIZE));
+			response = new BankingSystemTransferResponse(transfer.getId(), bankTxId, SUCCESS_SIGNATURE);
 		}
+		// 요청이 성공적으로 끝나면, transfer의 상태변경
+		transfer.finishedRequest(response.getResult(), response.getBank_tx_id());
+		transferService.save(transfer);
 
-		return null;
+		return ResponseEntity.status(201).body(new TransferResponse(FINISHED_REQUEST, String.format("%0" + TX_ID_SIZE + "d", transfer.getId()), String.format("%0" + TX_ID_SIZE + "d", response.getBank_tx_id()), response.getResult()));
 	}
 }

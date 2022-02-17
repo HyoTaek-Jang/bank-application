@@ -1,6 +1,7 @@
 package com.daagng.test.db.entity;
 
 import static com.daagng.test.common.constants.bank.RegisterConstant.*;
+import static com.daagng.test.common.constants.bank.TransferConstant.*;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -36,6 +37,8 @@ public class Transfer extends BaseEntity{
 	@NotNull
 	private Long amount;
 
+	private Long bankTxId;
+
 	@ManyToOne
 	@JoinColumn
 	private Bank toBank;
@@ -44,4 +47,11 @@ public class Transfer extends BaseEntity{
 	@JoinColumn
 	private Account fromAccount;
 
+	public void finishedRequest(String result, Long bankTxId) {
+		if (result.equals(SUCCESS_SIGNATURE))
+			this.state = TRANSFER_SUCCESS;
+		if (result.equals(FAIL_SIGNATURE))
+			this.state = TRANSFER_FAIL;
+		this.bankTxId = bankTxId;
+	}
 }

@@ -21,7 +21,7 @@ public class TransferService {
 	}
 
 	public Long findTxId() {
-		Long lastId = transferRepository.findLastPK().orElse(-1L);
+		long lastId = transferRepository.findLastPK().orElse(-1L);
 		if (lastId >= MAX_TX_ID_NUMBER)
 			return null;
 		return lastId + 1;
