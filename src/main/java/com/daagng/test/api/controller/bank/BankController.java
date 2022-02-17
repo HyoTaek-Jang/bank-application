@@ -60,8 +60,9 @@ public class BankController {
 		Long accountNumber = validationService.numbericTest(registerAccountRequest.getAccountNumber(), ACCOUNT_NUMBER_SIZE_MSG);
 		Bank bank = validationService.bankCodeTest(registerAccountRequest.getCode(), NOT_EXIST_CODE);
 		if (accountService.findAccountByAccountNumber(accountNumber) != null)
-			return ResponseEntity.status(422).body(new BaseResponse(EXIST_ACCOUNT_NUMBER));
-		
+			return ResponseEntity.status(409).body(new BaseResponse(EXIST_ACCOUNT_NUMBER));
+
+		//TODO 뱅킹 시스템 body 추가
 		BankingSystemRegisterResponse response;
 		if (isRealBankingSystem){
 			 response = webClient.post()
@@ -96,29 +97,31 @@ public class BankController {
 		User user = (User)request.getAttribute("user");
 
 		// request 유효성 검사
+		//TODO 유효성 검사 서비스나 validation 서비스로 분리
 		//TODO 등록된 계좌 사용자 테스트
 		Long toAccountNumber = validationService.numbericTest(moneyRequest.getToAccountNumber(), ACCOUNT_NUMBER_SIZE_MSG);
 		Long fromAccountId = validationService.numbericTest(moneyRequest.getFromAccountId(), ACCOUNT_ID_SIZE_MSG);
 		Bank bank = validationService.bankCodeTest(moneyRequest.getToCode(), NOT_EXIST_CODE);
 		Account fromAccount = accountService.findAccountByAccountId(fromAccountId);
 		if (fromAccount == null || !Objects.equals(fromAccount.getUser().getId(), user.getId()))
-			return ResponseEntity.status(422).body(new BaseResponse(NOT_MATCHING_USER));
+			return ResponseEntity.status(409).body(new BaseResponse(NOT_MATCHING_USER));
 
 		// 지연 거래 내역 조회
 		if(transferService.findByAccountAndState(fromAccount, TRANSFER_WAITING)!=null)
-			return ResponseEntity.status(422).body(new BaseResponse(EXIST_WAITING_TRANSFER));
+			return ResponseEntity.status(409).body(new BaseResponse(EXIST_WAITING_TRANSFER));
 
 		Long lastPK = transferService.findLastPK();
 		if (lastPK == null)
-			return ResponseEntity.status(422).body(new BaseResponse(FULL_TX_ID));
+			return ResponseEntity.status(409).body(new BaseResponse(FULL_TX_ID));
 
 		Transfer transfer = new Transfer(toAccountNumber, TRANSFER_WAITING, moneyRequest.getAmount(), bank,
 			fromAccount);
 		transferService.save(transfer);
 
 		//TODO 뱅킹 API 호출
+		//TODO 뱅킹 시스템 body 추가
 		webClient.post()
-			.uri(REGISTER_PATH)
+			.uri(TRANSFER_PATH)
 			.retrieve()
 			.onStatus(HttpStatus::isError, clientResponse -> clientResponse.bodyToMono(BankingSystemErrorResponse.class)
 				.map(body -> new BankingSystemException(body, clientResponse.statusCode())))

@@ -14,4 +14,5 @@ public class BankingSystemConstant {
 	public static final String WRONG_ACCOUNT_INFO = "잘못된 계좌 정보";
 
 	public static final String REGISTER_PATH = "/register";
+	public static final String TRANSFER_PATH = "/transfer";
 }
