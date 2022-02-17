@@ -1,5 +1,6 @@
 package com.daagng.test.db.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,4 +16,6 @@ public interface TransferRepository extends JpaRepository<Transfer, Long> {
 
 	@Query(value = "SELECT MAX(id) FROM transfer", nativeQuery = true)
 	Optional<Long> findLastPK();
+
+	List<Transfer> findByState(Integer state);
 }

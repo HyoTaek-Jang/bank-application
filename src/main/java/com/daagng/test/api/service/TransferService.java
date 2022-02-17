@@ -2,6 +2,8 @@ package com.daagng.test.api.service;
 
 import static com.daagng.test.common.constants.bank.TransferConstant.*;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.daagng.test.db.entity.Account;
@@ -29,5 +31,9 @@ public class TransferService {
 
 	public Transfer save(Transfer transfer) {
 		return transferRepository.save(transfer);
+	}
+
+	public List<Transfer> findAllByState(Integer state) {
+		return transferRepository.findByState(state);
 	}
 }

@@ -52,6 +52,7 @@ public class Transfer extends BaseEntity{
 			this.state = TRANSFER_SUCCESS;
 		if (result.equals(FAIL_SIGNATURE))
 			this.state = TRANSFER_FAIL;
-		this.bankTxId = bankTxId;
+		if (bankTxId != null)
+			this.bankTxId = bankTxId;
 	}
 }

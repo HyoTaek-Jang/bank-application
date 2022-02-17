@@ -20,12 +20,25 @@ public class WebClientService {
 
 	private final WebClient webClient;
 
-	public <T>T bankingServicePost(Class<T> responseType, Object requestBody, String path) {
+	public <T> T bankingServicePost(Class<T> responseType, Object requestBody, String path) {
 		return webClient.post()
 			.uri(path)
 			.contentType(MediaType.APPLICATION_JSON)
 			.accept(MediaType.APPLICATION_JSON)
 			.bodyValue(requestBody)
+			.retrieve()
+			.onStatus(HttpStatus::isError,
+				clientResponse -> clientResponse.bodyToMono(BankingSystemErrorResponse.class)
+					.map(body -> new BankingSystemException(body, clientResponse.statusCode())))
+			.bodyToMono(responseType)
+			.timeout(Duration.ofSeconds(BANK_TIMEOUT))
+			.block();
+	}
+
+	public <T> T bankingServiceGet(Class<T> responseType, String path) {
+		return webClient.get()
+			.uri(path)
+			.accept(MediaType.APPLICATION_JSON)
 			.retrieve()
 			.onStatus(HttpStatus::isError,
 				clientResponse -> clientResponse.bodyToMono(BankingSystemErrorResponse.class)
