@@ -14,7 +14,6 @@ public class RegisterConstant {
 	public static final String ACCOUNT_ID_SIZE_MSG = "등록 계좌의 길이는 " + ACCOUNT_ID_SIZE + "자리 숫자입니다.";
 	public static final String EXIST_ACCOUNT_NUMBER = "이미 등록된 계좌번호입니다.";
 	public static final String NOT_EXIST_CODE = "존재하지 않는 은행코드입니다.";
-	public static final String NOT_MATCHING_USER = "등록된 계좌의 사용자가 아닙니다.";
 
 	public static final String SUCCESS_REGISTER = "계좌 등록을 완료했습니다.";
 }

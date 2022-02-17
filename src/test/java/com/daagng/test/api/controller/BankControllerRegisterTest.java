@@ -19,7 +19,7 @@ class BankControllerRegisterTest extends BaseTest {
 		//given
 		RegisterAccountRequest request = RegisterAccountRequest.builder()
 			.code("D001")
-			.accountNumber("1234567890")
+			.accountNumber("1122334455")
 			.build();
 
 		//When
@@ -73,7 +73,7 @@ class BankControllerRegisterTest extends BaseTest {
 		//given
 		RegisterAccountRequest request = RegisterAccountRequest.builder()
 			.code("D001")
-			.accountNumber("1234567890")
+			.accountNumber("1122334455")
 			.build();
 
 		//When
