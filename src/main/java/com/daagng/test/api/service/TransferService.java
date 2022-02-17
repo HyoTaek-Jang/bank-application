@@ -20,11 +20,11 @@ public class TransferService {
 		return transferRepository.findByFromAccountAndState(fromAccount, state).orElse(null);
 	}
 
-	public Long findLastPK() {
+	public Long findTxId() {
 		Long lastId = transferRepository.findLastPK().orElse(-1L);
 		if (lastId >= MAX_TX_ID_NUMBER)
 			return null;
-		return lastId;
+		return lastId + 1;
 	}
 
 	public Transfer save(Transfer transfer) {

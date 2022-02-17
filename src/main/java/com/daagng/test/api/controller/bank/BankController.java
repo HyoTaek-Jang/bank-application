@@ -13,6 +13,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,6 +23,8 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import com.daagng.test.api.request.bank.RegisterAccountRequest;
 import com.daagng.test.api.request.bank.TransferMoneyRequest;
+import com.daagng.test.api.request.bankingSystem.BankingSystemRegisterRequest;
+import com.daagng.test.api.request.bankingSystem.BankingSystemTransferRequest;
 import com.daagng.test.api.response.BaseResponse;
 import com.daagng.test.api.response.bank.RegisterAccountResponse;
 import com.daagng.test.api.response.bankingSystem.BankingSystemErrorResponse;
@@ -31,6 +34,7 @@ import com.daagng.test.api.service.AccountService;
 import com.daagng.test.api.service.BankService;
 import com.daagng.test.api.service.TransferService;
 import com.daagng.test.api.service.ValidationService;
+import com.daagng.test.api.service.WebClientService;
 import com.daagng.test.common.exception.BankingSystemException;
 import com.daagng.test.common.util.NumberUtil;
 import com.daagng.test.db.entity.Account;
@@ -48,32 +52,30 @@ public class BankController {
 	boolean isRealBankingSystem;
 
 	private final AccountService accountService;
-	private final WebClient webClient;
+	private final WebClientService webClientService;
 	private final ValidationService validationService;
 	private final TransferService transferService;
 
 	@PostMapping("/register")
-	public ResponseEntity<? extends BaseResponse> registerAccount(HttpServletRequest request,@Valid @RequestBody RegisterAccountRequest registerAccountRequest) {
+	public ResponseEntity<? extends BaseResponse> registerAccount(HttpServletRequest request,
+		@Valid @RequestBody RegisterAccountRequest registerAccountRequest) {
 		User user = (User)request.getAttribute("user");
 
 		// request 유효성 검사
-		Long accountNumber = validationService.numbericTest(registerAccountRequest.getAccountNumber(), ACCOUNT_NUMBER_SIZE_MSG);
+		Long accountNumber = validationService.numbericTest(registerAccountRequest.getAccountNumber(),
+			ACCOUNT_NUMBER_SIZE_MSG);
 		Bank bank = validationService.bankCodeTest(registerAccountRequest.getCode(), NOT_EXIST_CODE);
 		if (accountService.findAccountByAccountNumber(accountNumber) != null)
 			return ResponseEntity.status(409).body(new BaseResponse(EXIST_ACCOUNT_NUMBER));
 
-		//TODO 뱅킹 시스템 body 추가
+		BankingSystemRegisterRequest bankingSystemRegisterRequest = new BankingSystemRegisterRequest(bank.getCode(),
+			registerAccountRequest.getAccountNumber());
 		BankingSystemRegisterResponse response;
-		if (isRealBankingSystem){
-			 response = webClient.post()
-				.uri(REGISTER_PATH)
-				.retrieve()
-				.onStatus(HttpStatus::isError, clientResponse -> clientResponse.bodyToMono(BankingSystemErrorResponse.class)
-					.map(body -> new BankingSystemException(body, clientResponse.statusCode())))
-				.bodyToMono(BankingSystemRegisterResponse.class)
-				.timeout(Duration.ofSeconds(BANK_TIMEOUT))
-				.block();
-		}else{
+		if (isRealBankingSystem) {
+			response = webClientService.postRequest(BankingSystemRegisterResponse.class,
+				bankingSystemRegisterRequest,
+				REGISTER_PATH);
+		} else {
 			// 뱅킹시스템이 작동을 안한다면, 정상적으로 작동이 됐다고 가정하고, 현재 존재하지 않는 랜덤한 Account Id를 제공 받는다.
 			Account existAccount = new Account();
 			Long temp = null;
@@ -88,7 +90,10 @@ public class BankController {
 		Account account = new Account(response.getBank_account_id(), accountNumber, user, bank);
 		accountService.save(account);
 
-		return ResponseEntity.status(201).body(new RegisterAccountResponse(String.format("%0"+ACCOUNT_ID_SIZE+"d", response.getBank_account_id()), SUCCESS_REGISTER));
+		return ResponseEntity.status(201)
+			.body(
+				new RegisterAccountResponse(String.format("%0" + ACCOUNT_ID_SIZE + "d", response.getBank_account_id()),
+					SUCCESS_REGISTER));
 	}
 
 	@PostMapping("/transfer")
@@ -99,7 +104,8 @@ public class BankController {
 		// request 유효성 검사
 		//TODO 유효성 검사 서비스나 validation 서비스로 분리
 		//TODO 등록된 계좌 사용자 테스트
-		Long toAccountNumber = validationService.numbericTest(moneyRequest.getToAccountNumber(), ACCOUNT_NUMBER_SIZE_MSG);
+		Long toAccountNumber = validationService.numbericTest(moneyRequest.getToAccountNumber(),
+			ACCOUNT_NUMBER_SIZE_MSG);
 		Long fromAccountId = validationService.numbericTest(moneyRequest.getFromAccountId(), ACCOUNT_ID_SIZE_MSG);
 		Bank bank = validationService.bankCodeTest(moneyRequest.getToCode(), NOT_EXIST_CODE);
 		Account fromAccount = accountService.findAccountByAccountId(fromAccountId);
@@ -107,27 +113,27 @@ public class BankController {
 			return ResponseEntity.status(409).body(new BaseResponse(NOT_MATCHING_USER));
 
 		// 지연 거래 내역 조회
-		if(transferService.findByAccountAndState(fromAccount, TRANSFER_WAITING)!=null)
+		if (transferService.findByAccountAndState(fromAccount, TRANSFER_WAITING) != null)
 			return ResponseEntity.status(409).body(new BaseResponse(EXIST_WAITING_TRANSFER));
 
-		Long lastPK = transferService.findLastPK();
-		if (lastPK == null)
+		Long txId = transferService.findTxId();
+		if (txId == null)
 			return ResponseEntity.status(409).body(new BaseResponse(FULL_TX_ID));
 
 		Transfer transfer = new Transfer(toAccountNumber, TRANSFER_WAITING, moneyRequest.getAmount(), bank,
 			fromAccount);
 		transferService.save(transfer);
 
-		//TODO 뱅킹 API 호출
-		//TODO 뱅킹 시스템 body 추가
-		webClient.post()
-			.uri(TRANSFER_PATH)
-			.retrieve()
-			.onStatus(HttpStatus::isError, clientResponse -> clientResponse.bodyToMono(BankingSystemErrorResponse.class)
-				.map(body -> new BankingSystemException(body, clientResponse.statusCode())))
-			.bodyToMono(BankingSystemTransferResponse.class)
-			.timeout(Duration.ofSeconds(BANK_TIMEOUT))
-			.block();
+		BankingSystemTransferRequest bankingSystemTransferRequest = new BankingSystemTransferRequest(txId,
+			fromAccountId,
+			bank.getCode(), moneyRequest.getToAccountNumber(), moneyRequest.getAmount());
+		BankingSystemTransferResponse response;
+		if (isRealBankingSystem) {
+			response = webClientService.postRequest(BankingSystemTransferResponse.class, bankingSystemTransferRequest,
+				TRANSFER_PATH);
+		} else {
+
+		}
 
 		return null;
 	}
