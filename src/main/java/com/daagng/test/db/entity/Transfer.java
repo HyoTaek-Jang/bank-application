@@ -4,6 +4,7 @@ import static com.daagng.test.common.constants.bank.RegisterConstant.*;
 import static com.daagng.test.common.constants.bank.TransferConstant.*;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -39,11 +40,11 @@ public class Transfer extends BaseEntity{
 
 	private Long bankTxId;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn
 	private Bank toBank;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn
 	private Account fromAccount;
 
