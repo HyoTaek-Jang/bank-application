@@ -1,13 +1,16 @@
 ## Index
-### [registerAccount](#registerAccount)
 
-## 뱅킹 시스템 API를 연동해서 사용자끼리 계좌이체를 할 수 있는 API Router입니다.
+**[registerAccount](#registerAccount)**
 
-## Base URL
+**[transferMoney](#transferMoney)**
+
+### 뱅킹 시스템 API를 연동해서 사용자끼리 계좌이체를 할 수 있는 Controller입니다.
+
+### Base URL
 
 `http://localhost:8080/bank`
 
-## registerAccount
+### registerAccount
 
 ### description
 
@@ -25,9 +28,9 @@
 
 - header
 
-- | Field        | Type   | Required  | Description |
-  | ------------ | ------ | --------- | ----------- |
-  | Authorization  | Integer | True | 현재 토큰을 사용하지 않기에 userId를 넣어주시면 됩니다. |
+- | Field        | Type   | Required  | Description | Example |
+  | ------------ | ------ | --------- | ----------- | ------- |
+  | Authorization  | Integer | True | 현재 토큰을 사용하지 않기에 userId를 넣어주시면 됩니다. | 1 |
 
 - body
 
@@ -71,6 +74,111 @@
 400
 {
   "message": "은행코드는 4자리입니다."
+}
+```
+```
+409
+{
+  "message": "이미 등록된 계좌번호입니다."
+}
+```
+```
+500
+{
+  "message": "뱅킹 서비스의 요청이 지연되고 있습니다."
+}
+```
+```
+400, 422, 500
+{
+  "message": {뱅킹 시스템 메시지}
+}
+```
+
+### transferMoney
+
+### description
+
+등록된 계좌를 사용해 다른 사람 계좌번호로 계좌이체를 하는 API입니다.
+
+### Request
+
+- Method
+
+  - `POST`
+
+- URI
+
+  - `/transfer`
+
+- header
+
+- | Field        | Type   | Required  | Description | Example |
+    | ------------ | ------ | --------- | ----------- | ------- |
+  | Authorization  | Integer | True | 현재 토큰을 사용하지 않기에 userId를 넣어주시면 됩니다. | 1 |
+
+- body
+
+```json
+{
+  "toCode" : "D001",
+  "toAccountNumber" : "0987654321",
+  "amount" : 10000,
+  "fromAccountId" : "12345678"
+}
+```
+
+- | Field                | Type   | Description                 |
+    | -------------------- | ------ | --------------------------- |
+  | toCode                 | String   | 받는 사람의 은행코드 ("D001", "D002", "D003)  |
+  | toAccountNumber | String | 받는 사람의 계좌번호 (10자리 숫자 값) |
+  | amount | Long | 이체금액 |
+  | fromAccountId | String | 보내는 사람의 계좌ID (8자리 숫자 값) |
+
+### Response
+
+- success
+
+```
+201
+{
+    "message": "요청을 성공적으로 수행했습니다.",
+    "txId": "00000001",
+    "bankTxId": "73711073",
+    "result": "SUCCESS"
+}
+ ```
+
+- | Field                          | Type    | Description                  |
+    | ------------------------------ | ------- | ---------------------------- |
+  | message                        | String | 요청 응답에 대한 메시지          |
+  | txId                      | String  | 이체에 대한 자체 서버의 id           |
+  | bankTxId                      | String  | 이체에 대한 뱅킹서비스의 id           |
+  | result                      | String  | 이체의 성공여부           |
+
+- fail
+```
+400
+{
+  "message": "계좌번호 길이는 10자리 숫자입니다."
+}
+```
+```
+400
+{
+  "message": "은행코드는 4자리입니다."
+}
+```
+```
+409
+{
+  "message": "현재 진행 중인 계좌이체가 존재합니다."
+}
+```
+```
+409
+{
+  "message": "등록된 계좌의 사용자가 아닙니다."
 }
 ```
 ```
