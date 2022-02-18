@@ -4,6 +4,8 @@
 
 **[transferMoney](#transferMoney)**
 
+**[findTransferHistory](#findTransferHistory)**
+
 ## 뱅킹 시스템 API를 연동해서 사용자끼리 계좌이체를 할 수 있는 Controller입니다.
 
 ### Base URL
@@ -120,7 +122,7 @@
 - header
 
 - | Field        | Type   | Required  | Description | Example |
-    | ------------ | ------ | --------- | ----------- | ------- |
+  | ------------ | ------ | --------- | ----------- | ------- |
   | Authorization  | Integer | True | 현재 토큰을 사용하지 않기에 userId를 넣어주시면 됩니다. | 1 |
 
 - body
@@ -135,7 +137,7 @@
 ```
 
 - | Field                | Type   | Description                 |
-    | -------------------- | ------ | --------------------------- |
+  | -------------------- | ------ | --------------------------- |
   | toCode                 | String   | 받는 사람의 은행코드 ("D001", "D002", "D003)  |
   | toAccountNumber | String | 받는 사람의 계좌번호 (10자리 숫자 값) |
   | amount | Long | 이체금액 |
@@ -231,7 +233,7 @@
 - header
 
 - | Field        | Type   | Required  | Description | Example |
-      | ------------ | ------ | --------- | ----------- | ------- |
+  | ------------ | ------ | --------- | ----------- | ------- |
   | Authorization  | Integer | True | 현재 토큰을 사용하지 않기에 userId를 넣어주시면 됩니다. | 1 |
 
 ### Response
@@ -266,7 +268,7 @@
  ```
 
 - | Field                          | Type    | Description                  |
-      | ------------------------------ | ------- | ---------------------------- |
+  | ------------------------------ | ------- | ---------------------------- |
   | message                        | String | 요청 응답에 대한 메시지          |
   | historyList                      | List  | 송금내역 리스트           |
   | historyList[].fromAccountId      | String  | 보내는 사람의 account id       |
