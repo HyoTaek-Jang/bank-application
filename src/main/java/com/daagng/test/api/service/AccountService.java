@@ -16,7 +16,7 @@ public class AccountService {
 
 	private final AccountRepository accountRepository;
 
-	public Account findAccountByAccountNumber(Long accountNumber) {
+	public Account findByAccountNumber(Long accountNumber) {
 		return accountRepository.findByAccountNumber(accountNumber).orElse(null);
 	}
 
@@ -24,11 +24,11 @@ public class AccountService {
 		return accountRepository.save(account);
 	}
 
-	public Account findAccountByAccountId(Long accountId) {
+	public Account findByAccountId(Long accountId) {
 		return accountRepository.findByAccountId(accountId).orElse(null);
 	}
 
-	public List<Account> findAccountByUser(User user) {
+	public List<Account> findByUser(User user) {
 		return accountRepository.findByUser(user);
 	}
 }

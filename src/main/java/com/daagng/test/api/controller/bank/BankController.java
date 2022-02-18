@@ -64,7 +64,7 @@ public class BankController {
 		Long accountNumber = validationService.numbericTest(registerAccountRequest.getAccountNumber(),
 			ACCOUNT_NUMBER_SIZE_MSG);
 		Bank bank = validationService.bankCodeTest(registerAccountRequest.getCode(), NOT_EXIST_CODE);
-		if (accountService.findAccountByAccountNumber(accountNumber) != null)
+		if (accountService.findByAccountNumber(accountNumber) != null)
 			return ResponseEntity.status(409).body(new BaseResponse(EXIST_ACCOUNT_NUMBER));
 
 		BankingSystemRegisterRequest bankingSystemRegisterRequest = new BankingSystemRegisterRequest(bank.getCode(),
@@ -80,7 +80,7 @@ public class BankController {
 			Long accountId = null;
 			while (existAccount != null) {
 				accountId = Long.parseLong(NumberUtil.makeRandomNumbers(ACCOUNT_ID_SIZE));
-				existAccount = accountService.findAccountByAccountId(accountId);
+				existAccount = accountService.findByAccountId(accountId);
 			}
 			response = new BankingSystemRegisterResponse(accountId);
 		}
@@ -104,7 +104,7 @@ public class BankController {
 			ACCOUNT_NUMBER_SIZE_MSG);
 		Long fromAccountId = validationService.numbericTest(moneyRequest.getFromAccountId(), ACCOUNT_ID_SIZE_MSG);
 		Bank bank = validationService.bankCodeTest(moneyRequest.getToCode(), NOT_EXIST_CODE);
-		Account fromAccount = accountService.findAccountByAccountId(fromAccountId);
+		Account fromAccount = accountService.findByAccountId(fromAccountId);
 		if (fromAccount == null || !Objects.equals(fromAccount.getUser().getId(), user.getId()))
 			return ResponseEntity.status(409).body(new BaseResponse(NOT_MATCHING_USER));
 
@@ -146,7 +146,7 @@ public class BankController {
 	@GetMapping("/history")
 	public ResponseEntity<? extends BaseResponse> findTransferHistory(HttpServletRequest request) {
 		User user = (User)request.getAttribute("user");
-		List<Account> accountList = accountService.findAccountByUser(user);
+		List<Account> accountList = accountService.findByUser(user);
 		List<TransferHistoryDto> responses = new LinkedList<>();
 
 		for (Account account:
