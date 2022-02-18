@@ -151,12 +151,10 @@ public class BankController {
 
 		for (Account account:
 			 accountList) {
-			List<Transfer> byAccount = transferService.findByAccount(account);
-			List<TransferHistoryDto> collect = byAccount
+			responses.addAll(transferService.findByAccount(account)
 				.stream()
 				.map(transfer -> new TransferHistoryDto(transfer, account))
-				.collect(Collectors.toList());
-			responses.addAll(collect);
+				.collect(Collectors.toList()));
 		}
 
 		return ResponseEntity.status(200).body(new TransferHistoryResponse(FIND_TRANSFER_HISTORY, responses));
