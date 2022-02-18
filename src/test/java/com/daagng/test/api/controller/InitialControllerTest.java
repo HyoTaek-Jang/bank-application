@@ -14,11 +14,11 @@ class InitialControllerTest extends BaseTest {
 	@DisplayName("auth interceptor test - success")
 	void authInterceptorSuccessTest() throws Exception {
 		//When
-		ResultActions authorization = this.mockMvc.perform(
+		ResultActions resultActions = this.mockMvc.perform(
 			get("/test/auth").header("Authorization", 1));
 
 		//Then
-		authorization.andExpect(
+		resultActions.andExpect(
 			content().string("pass auth interceptor")).andExpect(status().isOk());
 	}
 
@@ -26,10 +26,10 @@ class InitialControllerTest extends BaseTest {
 	@DisplayName("auth interceptor test - fail")
 	void authInterceptorFailTest() throws Exception {
 		//When
-		ResultActions authorization = this.mockMvc.perform(
+		ResultActions resultActions = this.mockMvc.perform(
 			get("/test/auth").header("Authorization", "a123"));
 
 		//Then
-		authorization.andExpect(status().isUnauthorized());
+		resultActions.andExpect(status().isUnauthorized());
 	}
 }

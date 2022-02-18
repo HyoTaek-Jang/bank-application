@@ -45,12 +45,12 @@ class BankControllerTransferTest extends BaseTest {
 			.build();
 
 		//When
-		ResultActions authorization = this.mockMvc.perform(
+		ResultActions resultActions = this.mockMvc.perform(
 			post("/bank/transfer").header("Authorization", 1).contentType(MediaType.APPLICATION_JSON).content(
 				this.objectMapper.writeValueAsString(request)));
 
 		//Then
-		authorization.andExpect(status().is2xxSuccessful());
+		resultActions.andExpect(status().is2xxSuccessful());
 	}
 
 	@Test
@@ -65,12 +65,12 @@ class BankControllerTransferTest extends BaseTest {
 			.build();
 
 		//When
-		ResultActions authorization = this.mockMvc.perform(
+		ResultActions resultActions = this.mockMvc.perform(
 			post("/bank/transfer").header("Authorization", 2).contentType(MediaType.APPLICATION_JSON).content(
 				this.objectMapper.writeValueAsString(request)));
 
 		//Then
-		authorization.andExpect(status().is4xxClientError()).andExpect(jsonPath("message", String.class).value(NOT_MATCHING_USER));
+		resultActions.andExpect(status().is4xxClientError()).andExpect(jsonPath("message", String.class).value(NOT_MATCHING_USER));
 	}
 
 	@Test
@@ -90,18 +90,17 @@ class BankControllerTransferTest extends BaseTest {
 		Account account = accountRepository.findByAccountId(12345678L).orElse(null);
 		transferRepository.save(new Transfer(1112223334L, 2, 10000L, 87654321L, bank, account));
 
-		ResultActions authorization = this.mockMvc.perform(
+		ResultActions resultActions = this.mockMvc.perform(
 			post("/bank/transfer").header("Authorization", 1).contentType(MediaType.APPLICATION_JSON).content(
 				this.objectMapper.writeValueAsString(request)));
 
 		//Then
-		authorization.andExpect(status().is4xxClientError()).andExpect(jsonPath("message", String.class).value(EXIST_WAITING_TRANSFER));
+		resultActions.andExpect(status().is4xxClientError()).andExpect(jsonPath("message", String.class).value(EXIST_WAITING_TRANSFER));
 	}
 
 	@Test
 	@DisplayName("transfer API test - success")
 	void transferSuccessTest() throws Exception {
-
 		//given
 		TransferMoneyRequest request = TransferMoneyRequest.builder()
 			.amount(10000L)
@@ -111,12 +110,12 @@ class BankControllerTransferTest extends BaseTest {
 			.build();
 
 		//When
-		ResultActions authorization = this.mockMvc.perform(
+		ResultActions resultActions = this.mockMvc.perform(
 			post("/bank/transfer").header("Authorization", 1).contentType(MediaType.APPLICATION_JSON).content(
 				this.objectMapper.writeValueAsString(request)));
 
 		//Then
-		authorization.andExpect(status().is2xxSuccessful()).andExpect(jsonPath("message", String.class).value(FINISHED_REQUEST));
+		resultActions.andExpect(status().is2xxSuccessful()).andExpect(jsonPath("message", String.class).value(FINISHED_REQUEST));
 	}
 
 }

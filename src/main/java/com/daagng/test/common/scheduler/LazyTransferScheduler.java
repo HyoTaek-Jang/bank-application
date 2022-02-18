@@ -1,5 +1,6 @@
 package com.daagng.test.common.scheduler;
 
+import static com.daagng.test.common.constants.CommonConstant.*;
 import static com.daagng.test.common.constants.bank.BankingSystemConstant.*;
 import static com.daagng.test.common.constants.bank.TransferConstant.*;
 
@@ -25,7 +26,7 @@ public class LazyTransferScheduler {
 	private final TransferService transferService;
 	private final WebClientService webClientService;
 
-	@Scheduled(cron = "*/5 * * * * *")
+	@Scheduled(cron = SCHEDULER_INTERVAL)
 	public void lazyTransferScheduler() {
 		for (Transfer transfer :
 			transferService.findAllByState(TRANSFER_WAITING)) {

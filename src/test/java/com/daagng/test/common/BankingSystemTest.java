@@ -16,11 +16,11 @@ public class BankingSystemTest extends BaseTest {
 	@DisplayName("bankingService exception handle")
 	void bankingServiceErrorHandlingTest() throws Exception {
 		//When
-		ResultActions authorization = this.mockMvc.perform(
+		ResultActions resultActions = this.mockMvc.perform(
 			get("/test/bankingSystem/exception").header("Authorization", 1));
 
 		//Then
-		authorization.andExpect(status().is4xxClientError())
+		resultActions.andExpect(status().is4xxClientError())
 			.andExpect(jsonPath("message", String.class).value(WRONG_ACCOUNT_INFO));
 	}
 
@@ -28,11 +28,11 @@ public class BankingSystemTest extends BaseTest {
 	@DisplayName("bankingService timeout handle")
 	void bankingServiceTimeoutHandlingTest() throws Exception {
 		//When
-		ResultActions authorization = this.mockMvc.perform(
+		ResultActions resultActions = this.mockMvc.perform(
 			get("/test/bankingSystem/timeout").header("Authorization", 1));
 
 		//Then
-		authorization.andExpect(status().is5xxServerError())
+		resultActions.andExpect(status().is5xxServerError())
 			.andExpect(jsonPath("message", String.class).value(LATE_RESPONSE_MSG));
 	}
 }

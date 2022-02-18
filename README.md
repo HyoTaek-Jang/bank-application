@@ -69,6 +69,7 @@ TODO : 설명 달기, 기본 삽입 데이터도 표현!, erd 업데이트
 2. 로컬 실행을 원하면 application.yml 에서 test, default db 연결 코드 수정해야함. 유저네임 비번, 디비
 3. docker-compose up [-D]
 4. docker-compose down or ctrl + c
+5. 지금은 테스트용 서버이기에 필수적인 요소를 data.sql로 삽입함. 실 서비스 profile에는 제거해서 사용 요망
 
 ## API 명세
 ### [API 명세 확인하기](./src/main/java/com/daagng/test/api/controller/bank/README.md)

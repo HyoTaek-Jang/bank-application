@@ -23,12 +23,12 @@ class BankControllerRegisterTest extends BaseTest {
 			.build();
 
 		//When
-		ResultActions authorization = this.mockMvc.perform(
+		ResultActions resultActions = this.mockMvc.perform(
 			post("/bank/register").header("Authorization", 1).contentType(MediaType.APPLICATION_JSON).content(
 				this.objectMapper.writeValueAsString(request)));
 
 		//Then
-		authorization.andExpect(status().is2xxSuccessful());
+		resultActions.andExpect(status().is2xxSuccessful());
 	}
 
 	@Test
@@ -41,12 +41,12 @@ class BankControllerRegisterTest extends BaseTest {
 			.build();
 
 		//When
-		ResultActions authorization = this.mockMvc.perform(
+		ResultActions resultActions = this.mockMvc.perform(
 			post("/bank/register").header("Authorization", 1).contentType(MediaType.APPLICATION_JSON).content(
 				this.objectMapper.writeValueAsString(request)));
 
 		//Then
-		authorization.andExpect(status().is4xxClientError());
+		resultActions.andExpect(status().is4xxClientError());
 	}
 
 	@Test
@@ -59,12 +59,12 @@ class BankControllerRegisterTest extends BaseTest {
 			.build();
 
 		//When
-		ResultActions authorization = this.mockMvc.perform(
+		ResultActions resultActions = this.mockMvc.perform(
 			post("/bank/register").header("Authorization", 1).contentType(MediaType.APPLICATION_JSON).content(
 				this.objectMapper.writeValueAsString(request)));
 
 		//Then
-		authorization.andExpect(status().is4xxClientError());
+		resultActions.andExpect(status().is4xxClientError());
 	}
 
 	@Test
@@ -77,12 +77,12 @@ class BankControllerRegisterTest extends BaseTest {
 			.build();
 
 		//When
-		ResultActions authorization = this.mockMvc.perform(
+		ResultActions resultActions = this.mockMvc.perform(
 			post("/bank/register").header("Authorization", 1).contentType(MediaType.APPLICATION_JSON).content(
 				this.objectMapper.writeValueAsString(request)));
 
 		//Then
-		authorization.andExpect(status().is2xxSuccessful()).andExpect(jsonPath("message", String.class).value(SUCCESS_REGISTER));
+		resultActions.andExpect(status().is2xxSuccessful()).andExpect(jsonPath("message", String.class).value(SUCCESS_REGISTER));
 	}
 
 }
