@@ -36,4 +36,8 @@ public class TransferService {
 	public List<Transfer> findAllByState(Integer state) {
 		return transferRepository.findByState(state);
 	}
+
+	public List<Transfer> findByAccount(Account account) {
+		return transferRepository.findByFromAccountId(account);
+	}
 }
