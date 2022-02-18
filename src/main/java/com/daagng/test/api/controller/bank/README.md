@@ -211,3 +211,65 @@
   "message": {뱅킹 시스템 메시지}
 }
 ```
+
+## findTransferHistory
+
+### description
+
+사용자의 모든 계좌에 대해 송금 내역을 조회합니다.
+
+### Request
+
+- Method
+
+  - `GET`
+
+- URI
+
+  - `/history`
+
+- header
+
+- | Field        | Type   | Required  | Description | Example |
+      | ------------ | ------ | --------- | ----------- | ------- |
+  | Authorization  | Integer | True | 현재 토큰을 사용하지 않기에 userId를 넣어주시면 됩니다. | 1 |
+
+### Response
+
+- success
+
+```
+200
+{
+    "message": "송금내역 조회를 완료했습니다.",
+    "historyList": [
+        {
+            "fromAccountId": "12345678",
+            "toAccountNumber": "4123123123",
+            "toBank": "D001",
+            "state": 0
+        },
+        {
+            "fromAccountId": "12345678",
+            "toAccountNumber": "1234561231",
+            "toBank": "D001",
+            "state": 0
+        },
+        {
+            "fromAccountId": "12345678",
+            "toAccountNumber": "7774561231",
+            "toBank": "D001",
+            "state": 0
+        }
+    ]
+}
+ ```
+
+- | Field                          | Type    | Description                  |
+      | ------------------------------ | ------- | ---------------------------- |
+  | message                        | String | 요청 응답에 대한 메시지          |
+  | historyList                      | List  | 송금내역 리스트           |
+  | historyList[].fromAccountId      | String  | 보내는 사람의 account id       |
+  | historyList[].toAccountNumber      | String  | 받는 사람의 계좌번호       |
+  | historyList[].toBank      | String  | 받는 사람의 은행코드       |
+  | historyList[].state      | Integer  | 송금에 대한 상태 (0: 완료, 1: 실패, 2: 송금중)       |
