@@ -38,6 +38,7 @@ public class Transfer extends BaseEntity{
 	@NotNull
 	private Long amount;
 
+	// 뱅킹시스템에서 주어진 Tx Id
 	private Long bankTxId;
 
 	@ManyToOne(fetch = FetchType.LAZY)
