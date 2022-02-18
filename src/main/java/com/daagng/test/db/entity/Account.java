@@ -45,10 +45,12 @@ public class Account extends BaseEntity {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn
+	@NotNull
 	private User user;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn
+	@NotNull
 	private Bank bank;
 
 	@OneToMany(mappedBy = "fromAccount")

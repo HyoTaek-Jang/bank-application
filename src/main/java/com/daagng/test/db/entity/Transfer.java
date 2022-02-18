@@ -43,10 +43,12 @@ public class Transfer extends BaseEntity{
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn
+	@NotNull
 	private Bank toBank;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn
+	@NotNull
 	private Account fromAccount;
 
 	public void finishedRequest(String result, Long bankTxId) {

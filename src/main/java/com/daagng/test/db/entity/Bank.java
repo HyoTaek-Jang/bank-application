@@ -27,6 +27,7 @@ public class Bank extends BaseEntity{
 	private String code;
 
 	// 은행명
+	@NotNull
 	private String name;
 
 	@OneToMany(mappedBy = "bank")
