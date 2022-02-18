@@ -2,11 +2,22 @@
 **:  뱅킹 시스템 API를 연동해서 사용자간 계좌이체를 제공하는 API 서버를 구현**
 
 ## 프로젝트 실행방법
-1. 실제 뱅킹 시스템을 사용하면 HOST와 application.yml에서 isReal true로 바꾸기
-2. 로컬 실행을 원하면 application.yml 에서 test, default db 연결 코드 수정해야함. 유저네임 비번, 디비
-3. docker-compose up [-D]
-4. docker-compose down or ctrl + c
-5. 지금은 테스트용 서버이기에 필수적인 요소를 data.sql로 삽입함. 실 서비스 profile에는 제거해서 사용 요망
+**프로젝트 기본 안내사항**
+   1. 현재 application.yml의 isRealBankingSystem 값이 false이기에 뱅킹 서비스를 사용하지 않습니다. 사용을 원하신다면 true로 변경해주세요.
+   2. 현재 버전에 대한 jar 파일을 미리 만들어 docker-jar에 삽입했습니다. 해당 jar를 사용하시거나, 코드의 수정을 하시고 docker-compose를 사용하신다면 jar를 다시 만들어 해당 폴더에 넣어주세요.
+   3. 현재 원활한 테스트를 위해 data.sql를 통해 기본 데이터를 삽입했습니다. 사용을 원하신다면 [**기본 삽입 데이터 보기**](https://low-cook-e1a.notion.site/726e801e60fd4e2bacea254bea580a72) 를 참고해주세요.
+
+**docker-compose로 구동하기**
+   1. docker-jar에 jar가 존재하는지 확인합니다.
+   2. docker-compose를 통해 사용하고 있는 포트가 없는지 확인합니다.
+   3. docker-compose up [-D] 를 통해 이미지를 빌드하고 컨테이너로 올립니다.
+   4. **MySQL이 실행되는 동안 스프링부트에서 오류가 발생할 수 있습니다. MySQL 컨테이너가 정상적으로 올라간 이후, 정상 작동하니 조금만 기다려주세요. (컨테이너 동작 시간 약 30초 소요)**
+   5. API 명세를 확인하여 테스팅합니다. (baseurl : localhost:8080)
+   6. 테스팅 이후, docker-compose down 나 ctrl + c 명령어를 통해 컨테이너를 종료합니다.
+
+**로컬 환경에서 구동하기**
+   1. 로컬 실행을 원하면 application.yml 에서 default와 test profile의 DB 연결 코드를 수정해주세요. (username, password, database url)
+   2. TestApplication main 메소드를 통해 구동합니다.
 
 ## ERD
 
