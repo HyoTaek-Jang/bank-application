@@ -37,7 +37,6 @@ public class GlobalExceptionHandler {
 		return ResponseEntity.status(e.getStatus()).body(new BaseResponse(e.getMessage()));
 	}
 
-	// 실수다 실수.. webClient에 에러 throw 했어야해
 	@ExceptionHandler(value = BankingSystemTimeoutException.class)
 	protected ResponseEntity<BaseResponse> handleTimeoutException(BankingSystemTimeoutException e) {
 		return ResponseEntity.status(500).body(new BaseResponse(BankingSystemConstant.LATE_RESPONSE_MSG));

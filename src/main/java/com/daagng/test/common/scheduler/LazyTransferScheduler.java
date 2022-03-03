@@ -20,9 +20,6 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 public class LazyTransferScheduler {
-	@Value("${isRealBankingSystem}")
-	boolean isRealBankingSystem;
-
 	private final TransferService transferService;
 	private final WebClientService webClientService;
 
@@ -32,13 +29,8 @@ public class LazyTransferScheduler {
 			transferService.findAllByState(TRANSFER_WAITING)) {
 			String path = TRANSFER_PATH + "/" + transfer.getId();
 			BankingSystemSearchTransferResponse transferResponse;
-			if (isRealBankingSystem) {
 				transferResponse = webClientService.bankingServiceGet(
 					BankingSystemSearchTransferResponse.class, path);
-			} else {
-				// 뱅킹 서비스가 작동하지 않으면 항상 성공을 반환함을 가정
-				transferResponse = new BankingSystemSearchTransferResponse(SUCCESS_SIGNATURE);
-			}
 			transfer.finishedRequest(transferResponse.getResult(), null);
 			transferService.save(transfer);
 			log.info("tx_id : " + transfer.getId() + "의 이체결과가 업데이트 됐습니다. result : " + transferResponse.getResult());

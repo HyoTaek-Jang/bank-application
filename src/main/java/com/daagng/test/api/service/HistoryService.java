@@ -31,18 +31,4 @@ public class HistoryService {
 		}
 		return responses;
 	}
-	//
-	// public List<TransferHistoryDto> findHistoryByDate(Timestamp timestamp, List<Account> accountList) {
-	// 	List<TransferHistoryDto> responses = new LinkedList<>();
-	// 	for (Account account:
-	// 		accountList) {
-	// 		responses.addAll(transferRepository.findByFromAccountAndCreatedAt(account, timestamp)
-	// 			.stream()
-	// 			.map(transfer -> new TransferHistoryDto(transfer, account))
-	// 			.collect(Collectors.toList()));
-	//
-	// 	}
-	// 	return responses;
-	// }
-
 }

@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @Builder
-// 빌더가 생성자 없을때 AllArgs 만들어주는데 내가 잭슨 역직렬화때문에 NoArg를 만들어서 AllArg를 넣어야함.
 @AllArgsConstructor
 @NoArgsConstructor
 public class RegisterAccountRequest {

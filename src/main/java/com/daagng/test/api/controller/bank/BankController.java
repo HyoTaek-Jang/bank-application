@@ -51,9 +51,6 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("bank")
 @RequiredArgsConstructor
 public class BankController {
-	@Value("${isRealBankingSystem}")
-	boolean isRealBankingSystem;
-
 	private final AccountService accountService;
 	private final WebClientService webClientService;
 	private final ValidationService validationService;
@@ -74,21 +71,10 @@ public class BankController {
 
 		BankingSystemRegisterRequest bankingSystemRegisterRequest = new BankingSystemRegisterRequest(bank.getCode(),
 			registerAccountRequest.getAccountNumber());
-		BankingSystemRegisterResponse response;
-		if (isRealBankingSystem) {
-			response = webClientService.bankingServicePost(BankingSystemRegisterResponse.class,
-				bankingSystemRegisterRequest,
-				REGISTER_PATH);
-		} else {
-			// 뱅킹시스템이 작동을 안한다면, 정상적으로 작동이 됐다고 가정하고, 현재 존재하지 않는 랜덤한 Account Id를 제공 받는다.
-			Account existAccount = new Account();
-			Long accountId = null;
-			while (existAccount != null) {
-				accountId = Long.parseLong(NumberUtil.makeRandomNumbers(ACCOUNT_ID_SIZE));
-				existAccount = accountService.findByAccountId(accountId);
-			}
-			response = new BankingSystemRegisterResponse(accountId);
-		}
+		BankingSystemRegisterResponse response = webClientService.bankingServicePost(
+			BankingSystemRegisterResponse.class,
+			bankingSystemRegisterRequest,
+			REGISTER_PATH);
 
 		Account account = new Account(response.getBank_account_id(), accountNumber, user, bank);
 		accountService.save(account);
@@ -116,7 +102,6 @@ public class BankController {
 
 		// 지연 거래 내역 조회
 		if (transferService.findByAccountAndState(fromAccount, TRANSFER_WAITING) != null)
-			// status
 			return ResponseEntity.status(409).body(new BaseResponse(EXIST_WAITING_TRANSFER));
 
 		if (transferService.findTxId() == null)
@@ -130,16 +115,9 @@ public class BankController {
 		BankingSystemTransferRequest bankingSystemTransferRequest = new BankingSystemTransferRequest(transfer.getId(),
 			fromAccountId,
 			bank.getCode(), moneyRequest.getToAccountNumber(), moneyRequest.getAmount());
-		BankingSystemTransferResponse response;
-		if (isRealBankingSystem) {
-			response = webClientService.bankingServicePost(BankingSystemTransferResponse.class,
+		BankingSystemTransferResponse response = webClientService.bankingServicePost(BankingSystemTransferResponse.class,
 				bankingSystemTransferRequest,
 				TRANSFER_PATH);
-		} else {
-			// 뱅킹시스템이 작동을 안한다면, 시간 초과 없이 정상 동작 반환을 받는다고 가정
-			Long bankTxId = Long.parseLong(NumberUtil.makeRandomNumbers(TX_ID_SIZE));
-			response = new BankingSystemTransferResponse(transfer.getId(), bankTxId, SUCCESS_SIGNATURE);
-		}
 		// 요청이 성공적으로 끝나면, transfer의 상태변경
 		transfer.finishedRequest(response.getResult(), response.getBank_tx_id());
 		transferService.save(transfer);
@@ -158,22 +136,4 @@ public class BankController {
 
 		return ResponseEntity.status(200).body(new TransferHistoryResponse(FIND_TRANSFER_HISTORY, responses));
 	}
-
-	// // 송금 날짜 기반 내역 조회 API
-	// @GetMapping("/history")
-	// public ResponseEntity<? extends BaseResponse> findTransferHistory(HttpServletRequest request, @RequestParam Timestamp date) {
-	// 	User user = (User)request.getAttribute("user");
-	// 	List<Account> accountList = accountService.findByUser(user);
-	// 	List<TransferHistoryDto> responses = new LinkedList<>();
-	//
-	// 	for (Account account:
-	// 		accountList) {
-	// 		responses.addAll(transferService.findByAccount(account)
-	// 			.stream()
-	// 			.map(transfer -> new TransferHistoryDto(transfer, account))
-	// 			.collect(Collectors.toList()));
-	// 	}
-	//
-	// 	return ResponseEntity.status(200).body(new TransferHistoryResponse(FIND_TRANSFER_HISTORY, responses));
-	// }
 }
