@@ -6,6 +6,7 @@ public class RegisterConstant {
 	public static final int ACCOUNT_ID_SIZE = 8;
 
 	public static final int MIN_NUMBER = 0;
+	// repeat 쓰니까 constant 아니라고 오류뜨넹
 	public static final String ACCOUNT_ID_MAX_NUMBER = "99999999";
 	public static final String ACCOUNT_NUMBER_MAX_NUMBER = "9999999999";
 

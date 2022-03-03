@@ -24,7 +24,7 @@ logging:
     org:
       springframework:
         web:
-          filter: DEBUG
+          filter: debug
 
 ---
 
@@ -39,7 +39,6 @@ spring:
     password: sa
 
 ---
-isRealBankingSystem: false
 
 spring:
   config:
@@ -50,3 +49,5 @@ spring:
     url: jdbc:mysql://localhost:3306/testdb?allowPublicKeyRetrieval=true&useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul
     username: root
     password: 1234
+
+isRealBankingSystem: false

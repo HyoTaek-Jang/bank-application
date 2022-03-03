@@ -4,6 +4,8 @@ import static com.daagng.test.common.constants.bank.BankingSystemConstant.*;
 import static com.daagng.test.common.constants.bank.RegisterConstant.*;
 import static com.daagng.test.common.constants.bank.TransferConstant.*;
 
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.daagng.test.api.request.bank.RegisterAccountRequest;
@@ -32,6 +35,7 @@ import com.daagng.test.api.response.bank.TransferResponse;
 import com.daagng.test.api.response.bankingSystem.BankingSystemRegisterResponse;
 import com.daagng.test.api.response.bankingSystem.BankingSystemTransferResponse;
 import com.daagng.test.api.service.AccountService;
+import com.daagng.test.api.service.HistoryService;
 import com.daagng.test.api.service.TransferService;
 import com.daagng.test.api.service.ValidationService;
 import com.daagng.test.api.service.WebClientService;
@@ -54,6 +58,7 @@ public class BankController {
 	private final WebClientService webClientService;
 	private final ValidationService validationService;
 	private final TransferService transferService;
+	private final HistoryService historyService;
 
 	@PostMapping("/register")
 	public ResponseEntity<? extends BaseResponse> registerAccount(HttpServletRequest request,
@@ -105,11 +110,13 @@ public class BankController {
 		Long fromAccountId = validationService.numbericTest(moneyRequest.getFromAccountId(), ACCOUNT_ID_SIZE_MSG);
 		Bank bank = validationService.bankCodeTest(moneyRequest.getToCode(), NOT_EXIST_CODE);
 		Account fromAccount = accountService.findByAccountId(fromAccountId);
-		if (fromAccount == null || !Objects.equals(fromAccount.getUser().getId(), user.getId()))
+
+		if (fromAccount == null || !fromAccount.getUser().getId().equals(user.getId()))
 			return ResponseEntity.status(409).body(new BaseResponse(NOT_MATCHING_USER));
 
 		// 지연 거래 내역 조회
 		if (transferService.findByAccountAndState(fromAccount, TRANSFER_WAITING) != null)
+			// status
 			return ResponseEntity.status(409).body(new BaseResponse(EXIST_WAITING_TRANSFER));
 
 		if (transferService.findTxId() == null)
@@ -147,16 +154,26 @@ public class BankController {
 	public ResponseEntity<? extends BaseResponse> findTransferHistory(HttpServletRequest request) {
 		User user = (User)request.getAttribute("user");
 		List<Account> accountList = accountService.findByUser(user);
-		List<TransferHistoryDto> responses = new LinkedList<>();
-
-		for (Account account:
-			 accountList) {
-			responses.addAll(transferService.findByAccount(account)
-				.stream()
-				.map(transfer -> new TransferHistoryDto(transfer, account))
-				.collect(Collectors.toList()));
-		}
+		List<TransferHistoryDto> responses = historyService.findAllHistory(accountList);
 
 		return ResponseEntity.status(200).body(new TransferHistoryResponse(FIND_TRANSFER_HISTORY, responses));
 	}
+
+	// // 송금 날짜 기반 내역 조회 API
+	// @GetMapping("/history")
+	// public ResponseEntity<? extends BaseResponse> findTransferHistory(HttpServletRequest request, @RequestParam Timestamp date) {
+	// 	User user = (User)request.getAttribute("user");
+	// 	List<Account> accountList = accountService.findByUser(user);
+	// 	List<TransferHistoryDto> responses = new LinkedList<>();
+	//
+	// 	for (Account account:
+	// 		accountList) {
+	// 		responses.addAll(transferService.findByAccount(account)
+	// 			.stream()
+	// 			.map(transfer -> new TransferHistoryDto(transfer, account))
+	// 			.collect(Collectors.toList()));
+	// 	}
+	//
+	// 	return ResponseEntity.status(200).body(new TransferHistoryResponse(FIND_TRANSFER_HISTORY, responses));
+	// }
 }

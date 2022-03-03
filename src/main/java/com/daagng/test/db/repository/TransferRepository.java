@@ -1,5 +1,7 @@
 package com.daagng.test.db.repository;
 
+import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,4 +24,7 @@ public interface TransferRepository extends JpaRepository<Transfer, Long> {
 
 	@Query(value = "SELECT t FROM Transfer t JOIN FETCH t.toBank WHERE t.fromAccount = :account")
 	List<Transfer> findByFromAccountId(@Param("account") Account account);
+
+	// List<Transfer> findByFromAccountAndCreatedAt(Account account, Timestamp timestamp);
+
 }
