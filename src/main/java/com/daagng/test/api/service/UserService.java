@@ -13,12 +13,7 @@ public class UserService {
 
 	private final UserRepository userRepository;
 
-	public User findUser(Long userId) {
+	public User findById(Long userId) {
 		return userRepository.findById(userId).orElse(null);
 	}
-
-	public User findUser(String name) {
-		return userRepository.findByName(name).orElse(null);
-	}
-
 }

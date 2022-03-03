@@ -21,7 +21,7 @@ public class ValidationService {
 	}
 
 	public Bank bankCodeTest(String code, String message) {
-		Bank bank = bankService.findBank(code);
+		Bank bank = bankService.findByCode(code);
 		if (bank == null)
 			throw new CustomValidException(400, message);
 		return bank;

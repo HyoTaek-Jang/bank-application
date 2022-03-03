@@ -9,13 +9,33 @@ import java.util.concurrent.TimeUnit;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 
 import com.daagng.test.BaseTest;
 import com.daagng.test.api.request.bank.TransferMoneyRequest;
+import com.daagng.test.db.entity.Account;
+import com.daagng.test.db.entity.Bank;
+import com.daagng.test.db.entity.Transfer;
+import com.daagng.test.db.repository.AccountRepository;
+import com.daagng.test.db.repository.BankRepository;
+import com.daagng.test.db.repository.TransferRepository;
 
 public class LazyTransferTest extends BaseTest {
+
+	private final TransferRepository transferRepository;
+	private final BankRepository bankRepository;
+	private final AccountRepository accountRepository;
+
+	@Autowired
+	public LazyTransferTest(TransferRepository transferRepository,
+		BankRepository bankRepository, AccountRepository accountRepository) {
+		this.transferRepository = transferRepository;
+		this.bankRepository = bankRepository;
+		this.accountRepository = accountRepository;
+	}
+
 	@Test
 	@DisplayName("lazy transfer scheduler test - before scheduler")
 	void beforeSchedulerTest() throws Exception {
@@ -28,6 +48,10 @@ public class LazyTransferTest extends BaseTest {
 			.build();
 
 		//When
+		Bank bank = bankRepository.findByCode("D001").orElse(null);
+		Account account = accountRepository.findByAccountId(12312312L).orElse(null);
+		transferRepository.save(new Transfer(1112223334L, 2, 10000L, 87654321L, bank, account));
+
 		ResultActions resultActions = this.mockMvc.perform(
 			post("/bank/transfer").header("Authorization", 2).contentType(MediaType.APPLICATION_JSON).content(
 				this.objectMapper.writeValueAsString(request)));

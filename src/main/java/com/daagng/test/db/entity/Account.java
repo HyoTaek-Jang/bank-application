@@ -25,7 +25,9 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
+// 아래에 생성자 코드가 있어서 noarg 필요함
 @NoArgsConstructor
+// 얘는 사실 없어도 됨.. 직접 컨트롤러나 서비스 단에서 다루는게 아니라서
 @AllArgsConstructor
 @Table(indexes = {@Index(name = "i_account_id", columnList = "accountId"), @Index(name = "i_account_number", columnList = "accountNumber")})
 public class Account extends BaseEntity {
@@ -45,10 +47,12 @@ public class Account extends BaseEntity {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn
+	@NotNull
 	private User user;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn
+	@NotNull
 	private Bank bank;
 
 	@OneToMany(mappedBy = "fromAccount")

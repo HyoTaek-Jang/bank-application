@@ -13,7 +13,7 @@ public class BankService {
 
 	private final BankRepository bankRepository;
 
-	public Bank findBank(String code) {
+	public Bank findByCode(String code) {
 		return bankRepository.findByCode(code).orElse(null);
 	}
 }

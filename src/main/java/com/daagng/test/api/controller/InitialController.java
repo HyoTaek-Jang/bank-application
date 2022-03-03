@@ -13,6 +13,7 @@ import com.daagng.test.common.exception.BankingSystemTimeoutException;
 
 import lombok.RequiredArgsConstructor;
 
+// Auth 인터셉터, Webclient 예외처리를 테스트하기 위한 컨트롤러
 @RestController
 @RequestMapping("test")
 @RequiredArgsConstructor

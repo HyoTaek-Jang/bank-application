@@ -22,7 +22,7 @@ public class AuthInterceptor implements AsyncHandlerInterceptor {
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
 		try {
 			Long userId = Long.parseLong(request.getHeader("Authorization"));
-			User user = userService.findUser(userId);
+			User user = userService.findById(userId);
 			if (user == null)
 				throw new UnauthorizedException();
 			request.setAttribute("user", user);

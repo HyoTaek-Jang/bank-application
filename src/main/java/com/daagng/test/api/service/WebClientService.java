@@ -13,6 +13,7 @@ import com.daagng.test.api.response.bankingSystem.BankingSystemErrorResponse;
 import com.daagng.test.common.exception.BankingSystemException;
 
 import lombok.RequiredArgsConstructor;
+import reactor.core.publisher.Mono;
 
 @Service
 @RequiredArgsConstructor
@@ -29,7 +30,8 @@ public class WebClientService {
 			.retrieve()
 			.onStatus(HttpStatus::isError,
 				clientResponse -> clientResponse.bodyToMono(BankingSystemErrorResponse.class)
-					.map(body -> new BankingSystemException(body, clientResponse.statusCode())))
+					.map(body -> new BankingSystemException(body, clientResponse.statusCode())).onErrorResume(
+						Mono::error))
 			.bodyToMono(responseType)
 			.timeout(Duration.ofSeconds(BANK_TIMEOUT))
 			.block();
