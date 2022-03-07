@@ -22,7 +22,4 @@ public interface TransferRepository extends JpaRepository<Transfer, Long> {
 
 	@Query(value = "SELECT t FROM Transfer t JOIN FETCH t.toBank WHERE t.fromAccount = :account")
 	List<Transfer> findByFromAccountId(@Param("account") Account account);
-
-	// List<Transfer> findByFromAccountAndCreatedAt(Account account, Timestamp timestamp);
-
 }
