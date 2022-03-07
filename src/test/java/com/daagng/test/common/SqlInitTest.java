@@ -6,10 +6,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.daagng.test.BaseTest;
-import com.daagng.test.db.entity.Bank;
-import com.daagng.test.db.entity.User;
-import com.daagng.test.db.repository.BankRepository;
-import com.daagng.test.db.repository.UserRepository;
+import com.daagng.test.api.db.entity.Bank;
+import com.daagng.test.api.db.entity.User;
+import com.daagng.test.api.db.repository.BankRepository;
+import com.daagng.test.api.db.repository.UserRepository;
 
 public class SqlInitTest extends BaseTest {
 	private final UserRepository userRepository;

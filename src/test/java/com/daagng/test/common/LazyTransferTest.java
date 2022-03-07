@@ -15,12 +15,12 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import com.daagng.test.BaseTest;
 import com.daagng.test.api.request.bank.TransferMoneyRequest;
-import com.daagng.test.db.entity.Account;
-import com.daagng.test.db.entity.Bank;
-import com.daagng.test.db.entity.Transfer;
-import com.daagng.test.db.repository.AccountRepository;
-import com.daagng.test.db.repository.BankRepository;
-import com.daagng.test.db.repository.TransferRepository;
+import com.daagng.test.api.db.entity.Account;
+import com.daagng.test.api.db.entity.Bank;
+import com.daagng.test.api.db.entity.Transfer;
+import com.daagng.test.api.db.repository.AccountRepository;
+import com.daagng.test.api.db.repository.BankRepository;
+import com.daagng.test.api.db.repository.TransferRepository;
 
 public class LazyTransferTest extends BaseTest {
 

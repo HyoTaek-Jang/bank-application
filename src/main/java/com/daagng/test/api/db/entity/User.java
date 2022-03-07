@@ -1,9 +1,8 @@
-package com.daagng.test.db.entity;
+package com.daagng.test.api.db.entity;
 
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;

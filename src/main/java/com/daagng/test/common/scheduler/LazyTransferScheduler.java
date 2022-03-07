@@ -4,14 +4,13 @@ import static com.daagng.test.common.constants.CommonConstant.*;
 import static com.daagng.test.common.constants.bank.BankingSystemConstant.*;
 import static com.daagng.test.common.constants.bank.TransferConstant.*;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.daagng.test.api.response.bankingSystem.BankingSystemSearchTransferResponse;
 import com.daagng.test.api.service.TransferService;
 import com.daagng.test.api.service.WebClientService;
-import com.daagng.test.db.entity.Transfer;
+import com.daagng.test.api.db.entity.Transfer;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

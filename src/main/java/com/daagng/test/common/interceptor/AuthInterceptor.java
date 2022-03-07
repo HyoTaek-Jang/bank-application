@@ -8,7 +8,7 @@ import org.springframework.web.servlet.AsyncHandlerInterceptor;
 
 import com.daagng.test.api.service.UserService;
 import com.daagng.test.common.exception.UnauthorizedException;
-import com.daagng.test.db.entity.User;
+import com.daagng.test.api.db.entity.User;
 
 import lombok.RequiredArgsConstructor;
 

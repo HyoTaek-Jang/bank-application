@@ -2,8 +2,8 @@ package com.daagng.test.api.response.bank;
 
 import static com.daagng.test.common.constants.bank.RegisterConstant.*;
 
-import com.daagng.test.db.entity.Account;
-import com.daagng.test.db.entity.Transfer;
+import com.daagng.test.api.db.entity.Account;
+import com.daagng.test.api.db.entity.Transfer;
 
 import lombok.Getter;
 

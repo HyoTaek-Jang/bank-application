@@ -1,4 +1,4 @@
-package com.daagng.test.db.entity;
+package com.daagng.test.api.db.entity;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;

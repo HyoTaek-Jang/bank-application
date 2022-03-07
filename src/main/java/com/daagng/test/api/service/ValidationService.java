@@ -4,7 +4,7 @@ import org.springframework.stereotype.Service;
 
 import com.daagng.test.common.exception.CustomValidException;
 import com.daagng.test.common.util.NumberUtil;
-import com.daagng.test.db.entity.Bank;
+import com.daagng.test.api.db.entity.Bank;
 
 import lombok.RequiredArgsConstructor;
 

@@ -4,23 +4,16 @@ import static com.daagng.test.common.constants.bank.BankingSystemConstant.*;
 import static com.daagng.test.common.constants.bank.RegisterConstant.*;
 import static com.daagng.test.common.constants.bank.TransferConstant.*;
 
-import java.sql.Timestamp;
-import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.daagng.test.api.request.bank.RegisterAccountRequest;
@@ -39,11 +32,10 @@ import com.daagng.test.api.service.HistoryService;
 import com.daagng.test.api.service.TransferService;
 import com.daagng.test.api.service.ValidationService;
 import com.daagng.test.api.service.WebClientService;
-import com.daagng.test.common.util.NumberUtil;
-import com.daagng.test.db.entity.Account;
-import com.daagng.test.db.entity.Bank;
-import com.daagng.test.db.entity.Transfer;
-import com.daagng.test.db.entity.User;
+import com.daagng.test.api.db.entity.Account;
+import com.daagng.test.api.db.entity.Bank;
+import com.daagng.test.api.db.entity.Transfer;
+import com.daagng.test.api.db.entity.User;
 
 import lombok.RequiredArgsConstructor;
 
@@ -102,7 +94,7 @@ public class BankController {
 
 		// 지연 거래 내역 조회
 		if (transferService.findByAccountAndState(fromAccount, TRANSFER_WAITING) != null)
-			return ResponseEntity.status(409).body(new BaseResponse(EXIST_WAITING_TRANSFER));
+			return ResponseEntity.status(500).body(new BaseResponse(EXIST_WAITING_TRANSFER));
 
 		if (transferService.findTxId() == null)
 			return ResponseEntity.status(409).body(new BaseResponse(FULL_TX_ID));

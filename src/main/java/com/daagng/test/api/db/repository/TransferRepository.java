@@ -1,7 +1,5 @@
-package com.daagng.test.db.repository;
+package com.daagng.test.api.db.repository;
 
-import java.sql.Timestamp;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -10,8 +8,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.daagng.test.db.entity.Account;
-import com.daagng.test.db.entity.Transfer;
+import com.daagng.test.api.db.entity.Account;
+import com.daagng.test.api.db.entity.Transfer;
 
 @Repository
 public interface TransferRepository extends JpaRepository<Transfer, Long> {

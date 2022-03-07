@@ -6,9 +6,9 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.daagng.test.db.entity.Account;
-import com.daagng.test.db.entity.Transfer;
-import com.daagng.test.db.repository.TransferRepository;
+import com.daagng.test.api.db.entity.Account;
+import com.daagng.test.api.db.entity.Transfer;
+import com.daagng.test.api.db.repository.TransferRepository;
 
 import lombok.RequiredArgsConstructor;
 

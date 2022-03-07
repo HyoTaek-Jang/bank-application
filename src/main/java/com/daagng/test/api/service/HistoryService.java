@@ -1,7 +1,5 @@
 package com.daagng.test.api.service;
 
-import java.sql.Timestamp;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -9,8 +7,8 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import com.daagng.test.api.response.bank.TransferHistoryDto;
-import com.daagng.test.db.entity.Account;
-import com.daagng.test.db.repository.TransferRepository;
+import com.daagng.test.api.db.entity.Account;
+import com.daagng.test.api.db.repository.TransferRepository;
 
 import lombok.RequiredArgsConstructor;
 
